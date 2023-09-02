@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>X新闻网后台管理 - 新闻管理</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.css">
+
+    <!--
+      # Optional Resources
+      Feel free to delete these if you don't need them in your project
+    -->
+</head>
+<body>
+<div id="app">
+    <div class="adminx-container">
+        <nav class="navbar navbar-expand justify-content-between fixed-top">
+            <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/admin/index">
+                <img th:src="@{/img/logo.png}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+                X新闻网后台管理
+            </a>
+
+            <div class="d-flex flex-1 d-block d-md-none">
+                <a href="#" class="sidebar-toggle ml-3">
+                    <i data-feather="menu"></i>
+                </a>
+            </div>
+
+            <ul class="navbar-nav d-flex justify-content-end mr-2">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="/logout">退出登录</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- expand-hover push -->
+        <!-- Sidebar -->
+        <div class="adminx-sidebar expand-hover push">
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">
+                    <a href="/admin/index" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-home fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">首页</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="/admin/user" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-user fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">用户管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="/admin/news" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-newspaper-o fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">新闻管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="/admin/category" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-bars fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">栏目管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="#" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-bell fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">公告管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+            </ul>
+        </div><!-- Sidebar End -->
+
+        <!-- adminx-content-aside -->
+        <div class="adminx-content">
+            <!-- <div class="adminx-aside">
+
+            </div> -->
+
+            <div class="adminx-main-content">
+                <div class="container-fluid">
+                    <!-- BreadCrumb -->
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb adminx-page-breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin/index">首页</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">新闻管理</li>
+                        </ol>
+                    </nav>
+
+                    <div class="pb-3">
+                        <h1>新闻管理</h1>
+                        <a href="/admin/news/addNews" class="btn btn-primary"
+                           style="margin: 10px auto 10px 15px">发布新闻</a>
+                        <div class="col">
+                            <div class="card mb-grid">
+                                <div class="table-responsive-md">
+                                    <div id="DataTables_Table_0_wrapper"
+                                         class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-2">
+                                                <div class="dataTables_length" id="DataTables_Table_0_length"><label>显示
+                                                    <select name="DataTables_Table_0_length"
+                                                            aria-controls="DataTables_Table_0"
+                                                            class="form-control form-control-sm"
+                                                            v-model="pageSize"
+                                                            @mouseleave="changePageSize">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select> 条</label></div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-4">
+                                                <div class="dataTables_length" id="DataTables_Table_0_length1"><label>栏目
+                                                    <select name="DataTables_Table_0_length"
+                                                            aria-controls="DataTables_Table_0"
+                                                            class="form-control form-control-sm"
+                                                            v-model="selected"
+                                                            @mouseleave="changeSelected">
+                                                        <option value="">请选择</option>
+                                                        <option v-for="item in categories" :value="item.id">
+                                                            {{item.name}}
+                                                        </option>
+                                                    </select></label></div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-6">
+                                                <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                                    <label>查找:<input
+                                                            type="search" class="form-control form-control-sm"
+                                                            aria-controls="DataTables_Table_0"
+                                                            v-model="search"
+                                                            @input="searchNews">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table class="table table-actions table-striped table-hover mb-0 dataTable no-footer"
+                                                       id="DataTables_Table_0" role="grid"
+                                                       aria-describedby="DataTables_Table_0_info">
+                                                    <thead>
+                                                    <tr role="row">
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="First Name: activate to sort column ascending"
+                                                            style="width: 228px;">编号
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Last Name: activate to sort column descending"
+                                                            style="width: 400px;" aria-sort="ascending">标题
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Username: activate to sort column ascending"
+                                                            style="width: 215px;">栏目
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Roles: activate to sort column ascending"
+                                                            style="width: 318px;">发表日期
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Roles: activate to sort column ascending"
+                                                            style="width: 159px;">编辑人
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Roles: activate to sort column ascending"
+                                                            style="width: 159px;">浏览量
+                                                        </th>
+                                                        <th scope="col" rowspan="1" colspan="1"
+                                                            aria-label="Actions" style="width: 102px;">操作
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr role="row" class="odd" v-for="(item, index) in news">
+                                                        <td>{{index + 1}}</td>
+                                                        <td>{{item.title}}</td>
+                                                        <td>{{item.category.name}}</td>
+                                                        <td>{{item.createTime}}</td>
+                                                        <td>{{item.author}}</td>
+                                                        <td>{{item.views}}</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary"
+                                                                    @click="viewNews(item.id)">查看
+                                                            </button>
+                                                            <button class="btn btn-sm btn-warning"
+                                                                    @click="updateNews(item.id)">修改
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger"
+                                                                    @click="deleteNews(item.id)">删除
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-5">
+                                                <div class="dataTables_info" id="DataTables_Table_0_info" role="status"
+                                                     aria-live="polite">
+                                                    共{{totalElements}}条数据，当前{{totalPages === 0 ? pageNum : pageNum + 1}}/{{totalPages}}页
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-7">
+                                                <div class="dataTables_paginate paging_simple_numbers"
+                                                     id="DataTables_Table_0_paginate">
+                                                    <ul class="pagination">
+                                                        <li class="paginate_button page-item previous"
+                                                            id="DataTables_Table_0_previous">
+                                                            <a aria-controls="DataTables_Table_0"
+                                                               tabindex="0"
+                                                               class="page-link"
+                                                               @click="previous(pageNum-1)">上一页</a>
+                                                        </li>
+                                                        <li class="paginate_button page-item active"
+                                                            v-for="(item, index) in totalPages">
+                                                            <a aria-controls="DataTables_Table_0"
+                                                               tabindex="0"
+                                                               class="page-link"
+                                                               @click="skip(index)">{{index + 1}}</a>
+                                                        </li>
+                                                        <li class="paginate_button page-item next"
+                                                            id="DataTables_Table_0_next">
+                                                            <a aria-controls="DataTables_Table_0"
+                                                               tabindex="0"
+                                                               class="page-link"
+                                                               @click="next(pageNum+1)">下一页</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+<script th:src="@{/dist/js/vendor.js}"></script>
+<script th:src="@{/dist/js/adminx.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+        integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- If you prefer vanilla JS these are the only required scripts -->
+<!-- script src="./dist/js/vendor.js"></script>
+<script src="./dist/js/adminx.vanilla.js"></script-->
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            pageSize: 10,
+            pageNum: 0,
+            totalElements: 0,
+            totalPages: 0,
+            selected: '',
+            categories: [],
+            search: '',
+            news: []
+        },
+        methods: {
+            getCategoryList() {
+                axios.get('/admin/category/getCategories')
+                    .then(res => {
+                        console.log(res)
+                        this.categories = res.data.msg
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            getNewsList() {
+                axios.get('/admin/news/getNews', {
+                    params: {
+                        pageNum: this.pageNum,
+                        pageSize: this.pageSize,
+                        categoryId: this.selected,
+                        search: this.search,
+                    }
+                })
+                    .then(res => {
+                        const msg = JSON.parse(res.data.msg)
+                        console.log(msg)
+                        this.news = msg.content
+                        this.totalElements = msg.totalElements
+                        this.totalPages = msg.totalPages
+                        this.news.forEach(news => {
+                            if (news.createTime != null) {
+                                news.createTime = news.createTime.replace('T', ' ')
+                            }
+                        })
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            viewNews(id) {
+
+            },
+            updateNews(id) {
+
+            },
+            deleteNews(id) {
+
+            },
+            previous(pageNum) {
+                pageNum = (pageNum >= 0) ? pageNum : 0;
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getNewsList()
+            },
+            skip(pageNum) {
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getNewsList()
+            },
+            next(pageNum) {
+                pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getNewsList()
+            },
+            changePageSize() {
+                console.log(this.pageSize)
+                this.getNewsList()
+            },
+            changeSelected() {
+                console.log(this.selected)
+                this.getNewsList()
+            },
+            searchNews() {
+                console.log(this.username)
+                this.getNewsList()
+            },
+        },
+        mounted() {
+            this.getCategoryList()
+            this.getNewsList()
+        },
+        watch: {
+            pageNum: function (newVal) {
+                this.pageNum = newVal
+                console.log(this.pageNum)
+            }
+        }
+    })
+</script>
+</body>
+</html>

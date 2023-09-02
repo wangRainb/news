@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>X新闻网 - 注册</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.css">
+    <script th:src="@{/dist/js/vendor.js}"></script>
+    <script th:src="@{/dist/js/adminx.js}"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="adminx-container d-flex justify-content-center align-items-center">
+        <div class="page-login">
+            <div class="text-center">
+                <a class="navbar-brand mb-4 h1" href="/admin/index">
+                    <img th:src="@{/img/logo.png}" class="navbar-brand-image d-inline-block align-top mr-2">
+                    X新闻网
+                </a>
+            </div>
+
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="username" class="form-label">用户名</label>
+                        <input class="form-control" v-bind:class="className1" id="username" v-model="username">
+                        <small class="form-text invalid-feedback">用户名不能为空！</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">密码</label>
+                        <input type="password" v-bind:class="className2" class="form-control" id="password"
+                               v-model="password">
+                        <small class="form-text invalid-feedback">密码不能为空！</small>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-block btn-primary" @click="login">注册</button>
+                </div>
+                <div class="card-footer text-center">
+                    <small>已有帐号？<a href="/admin/index">返回登录</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+
+<!-- If you prefer vanilla JS these are the only required scripts -->
+<!-- script src="../dist/js/vendor.js"></script>
+<script src="../dist/js/adminx.vanilla.js"></script-->
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            username: '',
+            password: '',
+            className1: '',
+            className2: ''
+        },
+        methods: {
+            login() {
+                if (this.username === '') {
+                    this.className1 = 'is-invalid'
+                }
+                if (this.password === '') {
+                    this.className2 = 'is-invalid'
+                } else {
+                    axios.post('/register', {
+                        username: this.username,
+                        password: this.password,
+                    })
+                        .then(res => {
+                            console.log(res)
+                            if (res.data.code === 500) {
+                                toastr.error(res.data.msg)
+                            } else {
+                                toastr.success(res.data.msg)
+                                setTimeout(function () {
+                                    window.location.href = '/login'
+                                }, 1000)
+                            }
+                        })
+                        .catch(res => {
+                            console.log(res)
+                        });
+                }
+            }
+        },
+        watch: {
+            username: function () {
+                if (this.username != '') {
+                    this.className1 = 'is-valid'
+                } else
+                    this.className1 = 'is-invalid'
+            },
+            password: function () {
+                if (this.password != '') {
+                    this.className2 = 'is-valid'
+                } else
+                    this.className2 = 'is-invalid'
+            }
+        }
+    })
+</script>
+</body>
+</html>

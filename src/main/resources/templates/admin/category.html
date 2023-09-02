@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>X新闻网后台管理 - 栏目管理</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.css">
+
+    <!--
+      # Optional Resources
+      Feel free to delete these if you don't need them in your project
+    -->
+</head>
+<body>
+<div id="app">
+    <div class="adminx-container">
+        <nav class="navbar navbar-expand justify-content-between fixed-top">
+            <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/admin/index">
+                <img th:src="@{/img/logo.png}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+                X新闻网后台管理
+            </a>
+
+            <div class="d-flex flex-1 d-block d-md-none">
+                <a href="#" class="sidebar-toggle ml-3">
+                    <i data-feather="menu"></i>
+                </a>
+            </div>
+
+            <ul class="navbar-nav d-flex justify-content-end mr-2">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="/logout">退出登录</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- expand-hover push -->
+        <!-- Sidebar -->
+        <div class="adminx-sidebar expand-hover push">
+            <ul class="sidebar-nav">
+                <li class="sidebar-nav-item">
+                    <a href="/admin/index" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-home fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">首页</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="/admin/user" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-user fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">用户管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="/admin/news" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-newspaper-o fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">新闻管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="/admin/category" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-bars fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">栏目管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-item">
+                    <a href="#" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-bell fa-lg"></i>
+                        </span>
+                        <span class="sidebar-nav-name">公告管理</span>
+                        <span class="sidebar-nav-end"></span>
+                    </a>
+                </li>
+            </ul>
+        </div><!-- Sidebar End -->
+
+        <!-- adminx-content-aside -->
+        <div class="adminx-content">
+            <!-- <div class="adminx-aside">
+
+            </div> -->
+
+            <div class="adminx-main-content">
+                <div class="container-fluid">
+                    <!-- BreadCrumb -->
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb adminx-page-breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin/index">首页</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">栏目管理</li>
+                        </ol>
+                    </nav>
+
+                    <div class="pb-3">
+                        <h1>栏目管理</h1>
+                        <button class="btn btn-primary" style="margin: 10px auto 10px 15px" data-toggle="modal"
+                                data-target="#exampleModal">添加栏目
+                        </button>
+                        <div class="col">
+                            <div class="card mb-grid">
+                                <div class="table-responsive-md">
+                                    <div id="DataTables_Table_0_wrapper"
+                                         class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table class="table table-actions table-striped table-hover mb-0 dataTable no-footer"
+                                                       id="DataTables_Table_0" role="grid"
+                                                       aria-describedby="DataTables_Table_0_info">
+                                                    <thead>
+                                                    <tr role="row">
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="First Name: activate to sort column ascending"
+                                                            style="width: 500px;">编号
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Last Name: activate to sort column descending"
+                                                            style="width: 500px;" aria-sort="ascending">栏目名
+                                                        </th>
+                                                        <th scope="col" rowspan="1" colspan="1"
+                                                            aria-label="Actions" style="width: 102px;">操作
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr role="row" class="odd" v-for="(item, index) in categories">
+                                                        <td>{{index + 1}}</td>
+                                                        <td>{{item.name}}</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-warning"
+                                                                    @click="category.id=item.id"
+                                                                    data-toggle="modal"
+                                                                    data-target="#exampleModal1">修改
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger"
+                                                                    @click="deleteCategory(item.id)">删除
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"
+                                                            id="exampleModalLabel">添加栏目</h5>
+                                                        <button type="button" class="close"
+                                                                data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input class="form-control"
+                                                               placeholder="栏目名" v-model="category.name">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button"
+                                                                class="btn btn-secondary"
+                                                                data-dismiss="modal">关闭
+                                                        </button>
+                                                        <button type="button"
+                                                                class="btn btn-primary"
+                                                                @click="addCategory">提交
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal1" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"
+                                                            id="exampleModalLabel1">修改栏目</h5>
+                                                        <button type="button" class="close"
+                                                                data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input class="form-control"
+                                                               placeholder="栏目名" v-model="category.name">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button"
+                                                                class="btn btn-secondary"
+                                                                data-dismiss="modal">关闭
+                                                        </button>
+                                                        <button type="button"
+                                                                class="btn btn-primary"
+                                                                @click="updateCategory">提交
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+<script th:src="@{/dist/js/vendor.js}"></script>
+<script th:src="@{/dist/js/adminx.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.3/bootbox.min.js"
+        integrity="sha512-U3Q2T60uOxOgtAmm9VEtC3SKGt9ucRbvZ+U3ac/wtvNC+K21Id2dNHzRUC7Z4Rs6dzqgXKr+pCRxx5CyOsnUzg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- If you prefer vanilla JS these are the only required scripts -->
+<!-- script src="./dist/js/vendor.js"></script>
+<script src="./dist/js/adminx.vanilla.js"></script-->
+
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            categories: [],
+            category: {
+                id: 0,
+                name: ''
+            }
+        },
+        methods: {
+            getCategoryList() {
+                axios.get('/admin/category/getCategories')
+                    .then(res => {
+                        console.log(res)
+                        this.categories = res.data.msg
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            addCategory() {
+                axios.post('/admin/category/addCategory', this.category)
+                    .then(res => {
+                        console.log(res)
+                        if (res.data.code === 0) {
+                            this.getCategoryList()
+                            toastr.success(res.data.msg)
+                        } else {
+                            toastr.error(res.data.msg)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            updateCategory() {
+                axios.post('/admin/category/updateCategory', {
+                    id: this.category.id,
+                    name: this.category.name
+                })
+                    .then(res => {
+                        console.log(res)
+                        if (res.data.code === 0) {
+                            this.getCategoryList()
+                            toastr.success(res.data.msg)
+                        } else {
+                            toastr.error(res.data.msg)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            deleteCategory(id) {
+                bootbox.confirm({
+                    size: "small",
+                    message: "确定删除吗？",
+                    buttons: {
+                        cancel: {
+                            label: '取消',
+                            className: 'btn-primary'
+                        },
+                        confirm: {
+                            label: '确定',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            axios.post('/admin/category/deleteCategory/' + id)
+                                .then(res => {
+                                    console.log(res)
+                                    app.getCategoryList()
+                                    toastr.success(res.data.msg)
+                                })
+                                .catch(error => {
+                                    console.log(error);
+                                })
+                        }
+                    }
+                })
+            }
+        },
+        mounted() {
+            this.getCategoryList()
+        }
+    })
+</script>
+</body>
+</html>

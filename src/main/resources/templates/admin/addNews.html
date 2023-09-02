@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>X新闻网后台管理 - 发布新闻</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+
+    <!--
+      # Optional Resources
+      Feel free to delete these if you don't need them in your project
+    -->
+</head>
+<body>
+<div class="adminx-container">
+    <nav class="navbar navbar-expand justify-content-between fixed-top">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/admin/index">
+            <img th:src="@{/img/logo.png}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            X新闻网后台管理
+        </a>
+
+        <div class="d-flex flex-1 d-block d-md-none">
+            <a href="#" class="sidebar-toggle ml-3">
+                <i data-feather="menu"></i>
+            </a>
+        </div>
+
+        <ul class="navbar-nav d-flex justify-content-end mr-2">
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="/logout">退出登录</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- expand-hover push -->
+    <!-- Sidebar -->
+    <div class="adminx-sidebar expand-hover push">
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="/admin/index" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-home fa-lg"></i>
+                        </span>
+                    <span class="sidebar-nav-name">首页</span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <li class="sidebar-nav-item">
+                <a href="/admin/user" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-user fa-lg"></i>
+                        </span>
+                    <span class="sidebar-nav-name">用户管理</span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <li class="sidebar-nav-item">
+                <a href="/admin/news" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-newspaper-o fa-lg"></i>
+                        </span>
+                    <span class="sidebar-nav-name">新闻管理</span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <li class="sidebar-nav-item">
+                <a href="/admin/category" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-bars fa-lg"></i>
+                        </span>
+                    <span class="sidebar-nav-name">栏目管理</span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <li class="sidebar-nav-item">
+                <a href="#" class="sidebar-nav-link active">
+                        <span class="sidebar-nav-icon">
+                            <i class="fa fa-bell fa-lg"></i>
+                        </span>
+                    <span class="sidebar-nav-name">公告管理</span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+        </ul>
+    </div><!-- Sidebar End -->
+
+    <!-- adminx-content-aside -->
+    <div class="adminx-content">
+        <!-- <div class="adminx-aside">
+
+        </div> -->
+
+        <div class="adminx-main-content">
+            <div class="container-fluid">
+                <!-- BreadCrumb -->
+                <nav aria-label="breadcrumb" role="navigation">
+                    <ol class="breadcrumb adminx-page-breadcrumb">
+                        <li class="breadcrumb-item"><a href="/admin/index">首页</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">发布新闻</li>
+                    </ol>
+                </nav>
+
+                <div class="pb-3">
+                    <h1>发布新闻</h1>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-grid">
+                                <div class="card-header">
+                                    <div class="card-header-title">新闻</div>
+                                </div>
+                                <div class="card-body">
+                                    <form action="/admin/news/addNews" method="post" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label for="title" class="form-label">新闻标题</label>
+                                            <input class="form-control" id="title" name="title" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="content">新闻内容</label>
+                                            <textarea class="form-control" id="content" name="content" rows="3"
+                                                      required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="cid">栏目</label>
+                                            <select class="form-control" id="cid" name="cid" required>
+                                                <option value="" selected>请选择</option>
+                                                <option th:each="item : ${categories}" th:value="${item.id}"
+                                                        th:text="${item.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="author"
+                                                   class="form-label">编辑</label>
+                                            <input class="form-control" name="author" id="author" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="img"
+                                                   class="form-label">图片</label>
+                                            <div class="custom-file">
+                                                <input type="file" name="img" class="custom-file-input" id="img">
+                                                <label class="custom-file-label" for="img">选择文件</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">发布</button>
+                                            |
+                                            <a href="/admin/news" type="submit" class="btn btn-primary">返回</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script th:src="@{/dist/js/vendor.js}"></script>
+<script th:src="@{/dist/js/adminx.js}"></script>
+
+<!-- If you prefer vanilla JS these are the only required scripts -->
+<!-- script src="./dist/js/vendor.js"></script>
+<script src="./dist/js/adminx.vanilla.js"></script-->
+</body>
+</html>

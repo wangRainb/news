@@ -273,37 +273,45 @@
                     })
             },
             addCategory() {
-                axios.post('/admin/category/addCategory', this.category)
-                    .then(res => {
-                        console.log(res)
-                        if (res.data.code === 0) {
-                            this.getCategoryList()
-                            toastr.success(res.data.msg)
-                        } else {
-                            toastr.error(res.data.msg)
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
+                if (this.category.name === '') {
+                    toastr.error('栏目名不能为空')
+                } else {
+                    axios.post('/admin/category/addCategory', this.category)
+                        .then(res => {
+                            console.log(res)
+                            if (res.data.code === 0) {
+                                this.getCategoryList()
+                                toastr.success(res.data.msg)
+                            } else {
+                                toastr.error(res.data.msg)
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
+                }
             },
             updateCategory() {
-                axios.post('/admin/category/updateCategory', {
-                    id: this.category.id,
-                    name: this.category.name
-                })
-                    .then(res => {
-                        console.log(res)
-                        if (res.data.code === 0) {
-                            this.getCategoryList()
-                            toastr.success(res.data.msg)
-                        } else {
-                            toastr.error(res.data.msg)
-                        }
+                if (this.category.name === '') {
+                    toastr.error('栏目名不能为空')
+                } else {
+                    axios.post('/admin/category/updateCategory', {
+                        id: this.category.id,
+                        name: this.category.name
                     })
-                    .catch(error => {
-                        console.log(error);
-                    })
+                        .then(res => {
+                            console.log(res)
+                            if (res.data.code === 0) {
+                                this.getCategoryList()
+                                toastr.success(res.data.msg)
+                            } else {
+                                toastr.error(res.data.msg)
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
+                }
             },
             deleteCategory(id) {
                 bootbox.confirm({

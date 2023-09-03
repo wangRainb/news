@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.Path;
@@ -19,6 +20,7 @@ import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author 18786
@@ -69,7 +71,7 @@ public class NewsServiceImpl implements NewsService {
         } else {
             news.setImg(IdUtil.randomUUID() + ".png");
             File path = new File("../news/src/main/resources/static");
-            String filePath = path.getCanonicalPath() + "\\img\\" + news.getImg() + ".png";
+            String filePath = path.getCanonicalPath() + "\\img\\" + news.getImg();
             FileOutputStream fileOutputStream = new FileOutputStream(filePath);
             FileCopyUtils.copy(img, fileOutputStream);
         }
@@ -84,5 +86,25 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News getNews(Integer id) {
         return newsDao.findById(id).get();
+    }
+
+    @Override
+    public void updateNews(News news, MultipartFile file) throws IOException {
+        Optional<News> optionalNews = newsDao.findById(news.getId());
+        if (!StringUtils.isNullOrEmpty(file.getOriginalFilename())) {
+            if (!file.getOriginalFilename().equals(optionalNews.get().getImg())) {
+                news.setImg(IdUtil.randomUUID() + ".png");
+                File path = new File("../news/src/main/resources/static");
+                String filePath = path.getCanonicalPath() + "\\img\\" + news.getImg();
+                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+                FileCopyUtils.copy(file.getBytes(), fileOutputStream);
+            } else {
+                news.setImg(optionalNews.get().getImg());
+            }
+        } else {
+            news.setImg(optionalNews.get().getImg());
+        }
+        news.setCreateTime(optionalNews.get().getCreateTime());
+        newsDao.save(news);
     }
 }

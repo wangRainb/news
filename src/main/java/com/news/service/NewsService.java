@@ -2,6 +2,7 @@ package com.news.service;
 
 import com.news.pojo.News;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -42,4 +43,12 @@ public interface NewsService {
      * @return News
      */
     News getNews(Integer id);
+
+    /**
+     * 修改新闻
+     *
+     * @param news
+     * @param file
+     */
+    void updateNews(News news, MultipartFile file) throws IOException;
 }

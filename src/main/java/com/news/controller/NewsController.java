@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -103,12 +104,12 @@ public class NewsController {
     }
 
     @PostMapping("/admin/news/updateNews")
-    public JsonResult updateNews(String id,
-                                 String title,
-                                 String content,
-                                 Integer cid,
-                                 String author,
-                                 @RequestPart(value = "img", required = false) byte[] img) throws Exception {
+    public String updateNews(String id,
+                             String title,
+                             String content,
+                             Integer cid,
+                             String author,
+                             @RequestPart(value = "img", required = false) MultipartFile file) throws Exception {
         if (StringUtils.isNullOrEmpty(id)
                 || StringUtils.isNullOrEmpty(title)
                 || StringUtils.isNullOrEmpty(content)
@@ -122,7 +123,8 @@ public class NewsController {
             news.setContent(content);
             news.setCid(cid);
             news.setAuthor(author);
-            return JsonResult.ok();
+            newsService.updateNews(news, file);
+            return "redirect:/admin/news";
         }
     }
 }

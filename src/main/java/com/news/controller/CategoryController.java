@@ -60,8 +60,11 @@ public class CategoryController {
         if (StringUtils.isEmpty(id)) {
             return JsonResult.error("id不能为空");
         } else {
-            categoryService.deleteCategory(id);
-            return JsonResult.ok("删除成功！");
+            if (categoryService.deleteCategory(id)) {
+                return JsonResult.ok("删除成功！");
+            } else {
+                return JsonResult.error("该栏目下还有新闻无法删除！");
+            }
         }
     }
 }

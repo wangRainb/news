@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -62,12 +65,17 @@ public class NewsServiceImpl implements NewsService {
         if (img == null) {
             news.setImg(null);
         } else {
-            news.setImg(IdUtil.randomUUID());
+            news.setImg(IdUtil.randomUUID() + ".png");
             File path = new File("../news/src/main/resources/static");
             String filePath = path.getCanonicalPath() + "\\img\\" + news.getImg() + ".png";
             FileOutputStream fileOutputStream = new FileOutputStream(filePath);
             FileCopyUtils.copy(img, fileOutputStream);
         }
         newsDao.save(news);
+    }
+
+    @Override
+    public void deleteNews(Integer id) {
+        newsDao.deleteById(id);
     }
 }

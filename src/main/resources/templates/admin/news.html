@@ -205,11 +205,9 @@
                                                         <td>{{item.author}}</td>
                                                         <td>{{item.views}}</td>
                                                         <td>
-                                                            <button class="btn btn-sm btn-primary"
-                                                                    @click="viewNews(item.id)">查看
+                                                            <button class="btn btn-sm btn-primary">查看评论
                                                             </button>
-                                                            <button class="btn btn-sm btn-warning"
-                                                                    @click="updateNews(item.id)">修改
+                                                            <button class="btn btn-sm btn-warning">修改
                                                             </button>
                                                             <button class="btn btn-sm btn-danger"
                                                                     @click="deleteNews(item.id)">删除
@@ -333,14 +331,35 @@
                         console.log(error);
                     })
             },
-            viewNews(id) {
-
-            },
-            updateNews(id) {
-
-            },
             deleteNews(id) {
-
+                console.log(id)
+                bootbox.confirm({
+                    size: "small",
+                    message: "确定删除吗？",
+                    buttons: {
+                        cancel: {
+                            label: '取消',
+                            className: 'btn-primary'
+                        },
+                        confirm: {
+                            label: '确定',
+                            className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            axios.post('/admin/news/deleteNews/' + id)
+                                .then(res => {
+                                    console.log(res)
+                                    app.getNewsList()
+                                    toastr.success('删除成功')
+                                })
+                                .catch(res => {
+                                    console.log(res)
+                                });
+                        }
+                    }
+                })
             },
             previous(pageNum) {
                 pageNum = (pageNum >= 0) ? pageNum : 0;

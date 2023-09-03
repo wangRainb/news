@@ -27,4 +27,11 @@ public interface NewsService {
      * @param img
      */
     void addNews(News news, byte[] img) throws IOException;
+
+    /**
+     * 删除新闻
+     *
+     * @param id
+     */
+    void deleteNews(Integer id);
 }

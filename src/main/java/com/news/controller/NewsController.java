@@ -79,4 +79,16 @@ public class NewsController {
         newsService.addNews(news, img);
         return "redirect:/admin/news";
     }
+
+
+    @PostMapping("/admin/news/deleteNews/{id}")
+    @ResponseBody
+    public JsonResult deleteNews(@PathVariable Integer id) {
+        if (id == null) {
+            return JsonResult.error("id不能为空！");
+        } else {
+            newsService.deleteNews(id);
+            return JsonResult.ok("删除成功！");
+        }
+    }
 }

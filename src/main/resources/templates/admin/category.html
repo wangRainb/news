@@ -332,8 +332,12 @@
                             axios.post('/admin/category/deleteCategory/' + id)
                                 .then(res => {
                                     console.log(res)
-                                    app.getCategoryList()
-                                    toastr.success(res.data.msg)
+                                    if (res.data.code === 0) {
+                                        app.getCategoryList()
+                                        toastr.success(res.data.msg)
+                                    } else {
+                                        toastr.error(res.data.msg)
+                                    }
                                 })
                                 .catch(error => {
                                     console.log(error);

@@ -42,8 +42,9 @@ public interface CategoryService {
      * 删除栏目
      *
      * @param id
+     * @return boolean
      */
-    void deleteCategory(Integer id);
+    boolean deleteCategory(Integer id);
 
     /**
      * 通过id获取栏目

@@ -1,6 +1,5 @@
 package com.news.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,14 +17,13 @@ public class News implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
-    @JsonIgnore
     private String content;
+    private int cid;
     private String img;
     @Column(name = "createtime")
     private LocalDateTime createTime;
     private String author;
     private int views;
-    @ManyToOne(targetEntity = Category.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "cid", referencedColumnName = "id")
+    @Transient
     private Category category;
 }

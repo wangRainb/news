@@ -2,7 +2,6 @@ package com.news.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.mysql.cj.util.StringUtils;
-import com.news.pojo.Category;
 import com.news.pojo.News;
 import com.news.service.CategoryService;
 import com.news.service.NewsService;
@@ -16,7 +15,6 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author 18786
@@ -60,20 +58,19 @@ public class NewsController {
     @PostMapping("/admin/news/addNews")
     public String addNews(String title,
                           String content,
-                          String cid,
+                          Integer cid,
                           String author,
                           @RequestPart(value = "img", required = false) byte[] img) throws Exception {
         if (StringUtils.isNullOrEmpty(title)
                 || StringUtils.isNullOrEmpty(content)
-                || StringUtils.isNullOrEmpty(cid)
+                || cid == null
                 || StringUtils.isNullOrEmpty(author)) {
             throw new RuntimeException();
         }
-        Optional<Category> optionalCategory = categoryService.getCategoryById(Integer.valueOf(cid));
         News news = new News();
         news.setTitle(title);
         news.setContent(content);
-        news.setCategory(optionalCategory.get());
+        news.setCid(cid);
         news.setAuthor(author);
         news.setCreateTime(LocalDateTime.now());
         newsService.addNews(news, img);

@@ -2,8 +2,8 @@ package com.news.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.mysql.cj.util.StringUtils;
+import com.news.dao.CategoryDao;
 import com.news.dao.NewsDao;
-import com.news.pojo.Category;
 import com.news.pojo.News;
 import com.news.service.NewsService;
 import org.springframework.data.domain.Page;
@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.io.File;
@@ -29,6 +27,8 @@ import java.io.IOException;
 public class NewsServiceImpl implements NewsService {
     @Resource
     private NewsDao newsDao;
+    @Resource
+    private CategoryDao categoryDao;
 
     @Override
     public Page<News> getNewsList(Integer pageNum, Integer pageSize, String categoryId, String search) {
@@ -39,7 +39,6 @@ public class NewsServiceImpl implements NewsService {
             Path path = root.get("title");
             //criteriaBuilder.like模糊查询，第一个参数是上一行的返回值，第二个参数是like('%xxx%')中，xxx的值
             Predicate predicate = criteriaBuilder.like(path, "%" + search + "%");
-            Join<Category, News> join = root.join("category", JoinType.INNER);
             Integer cid = null;
             if (!StringUtils.isNullOrEmpty(categoryId)) {
                 cid = Integer.valueOf(categoryId);
@@ -47,7 +46,7 @@ public class NewsServiceImpl implements NewsService {
             if (cid == null) {
                 return predicate;
             } else {
-                Predicate predicate1 = criteriaBuilder.equal(join.get("id"), cid);
+                Predicate predicate1 = criteriaBuilder.equal(root.get("cid"), cid);
                 Predicate predicate2 = criteriaBuilder.and(predicate, predicate1);
                 return predicate2;
             }
@@ -57,6 +56,9 @@ public class NewsServiceImpl implements NewsService {
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
         Page<News> page = newsDao.findAll(specification, pageRequest);
         //返回的数据都封装在了Page<News>对象中
+        page.getContent().forEach(user -> {
+            user.setCategory(categoryDao.findById(user.getCid()).get());
+        });
         return page;
     }
 

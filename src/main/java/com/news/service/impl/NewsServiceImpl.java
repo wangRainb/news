@@ -80,4 +80,9 @@ public class NewsServiceImpl implements NewsService {
     public void deleteNews(Integer id) {
         newsDao.deleteById(id);
     }
+
+    @Override
+    public News getNews(Integer id) {
+        return newsDao.findById(id).get();
+    }
 }

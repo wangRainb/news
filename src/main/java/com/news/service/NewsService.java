@@ -34,4 +34,12 @@ public interface NewsService {
      * @param id
      */
     void deleteNews(Integer id);
+
+    /**
+     * 获取新闻
+     *
+     * @param id
+     * @return News
+     */
+    News getNews(Integer id);
 }

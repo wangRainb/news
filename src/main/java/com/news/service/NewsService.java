@@ -73,4 +73,11 @@ public interface NewsService {
      * @return List<News>
      */
     List<News> getRelatedNews(Integer id, Integer cid);
+
+    /**
+     * 更新新闻浏览量
+     *
+     * @param id
+     */
+    void updateNewsView(Integer id);
 }

@@ -20,7 +20,6 @@ import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,5 +148,12 @@ public class NewsServiceImpl implements NewsService {
         Page<News> page = newsDao.findAll(specification, pageRequest);
         List<News> newsList = page.getContent();
         return newsList;
+    }
+
+    @Override
+    public void updateNewsView(Integer id) {
+        News news = newsDao.findById(id).get();
+        news.setViews(news.getViews() + 1);
+        newsDao.save(news);
     }
 }

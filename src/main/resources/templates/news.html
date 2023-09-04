@@ -66,9 +66,10 @@
                 <ul class="navbar-nav d-flex justify-content-end mr-2">
                     <!-- Notifications -->
                     <li class="nav-item dropdown">
-                        <a th:if="${session.get('user')}" class="nav-link avatar-with-name" id="navbarDropdownMenuLink"
+                        <a th:if="${session.user}" class="nav-link avatar-with-name" id="navbarDropdownMenuLink"
                            data-toggle="dropdown" href="#">
-                            <img class="d-inline-block align-top" alt="">
+                            <img th:src="@{${session.user.avatar != null ? '/img/' + session.user.avatar : '/img/logo.png'}}"
+                                 class="d-inline-block align-top" alt="">
                         </a>
                         <a th:unless="${session.get('user')}" class="nav-link" href="/login">登录/注册</a>
                         <div th:if="${session.get('user')}" class="dropdown-menu dropdown-menu-right"
@@ -102,10 +103,44 @@
                         </div>
                         <div class="col-md-6">
                             <ul class="list-group" th:unless="${relatedNews.isEmpty()}">
-                                <li class="list-group-item">
-                                    <a class="nav-link" th:each="item : ${relatedNews}" th:text="${item.title}"></a>
+                                <li class="list-group-item" th:each="item : ${relatedNews}">
+                                    <a class="nav-link" th:href="${'/news/' + item.id}"
+                                       th:text="${item.title}"></a>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 50px;">
+                        <div class="col-md-6">
+                            <div class="card mb-grid">
+                                <div class="card-header">
+                                    <div class="card-header-title">
+                                        网友评论<span style="text-align: right" th:text="'评论数：'"></span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="col-md-12">
+                                            <textarea class="form-control" rows="6" placeholder="我有话要说。。。"></textarea>
+                                            <div class="row" style="margin-top: 10px;">
+                                                <div class="col-sm-10" style="text-align: right">
+                                                    <span class="nav-link" th:unless="${session.user}">必须登录才能发表评论</span>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <a href="/login" class="nav-link"
+                                                       th:unless="${session.user}">登录</a>
+                                                    <button class="btn btn-primary" th:if="${session.user}">发表</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="comment">
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

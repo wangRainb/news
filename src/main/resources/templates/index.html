@@ -53,12 +53,13 @@
                 <ul class="navbar-nav d-flex justify-content-end mr-2">
                     <!-- Notifications -->
                     <li class="nav-item dropdown">
-                        <a th:if="${session.get('user')}" class="nav-link avatar-with-name" id="navbarDropdownMenuLink"
+                        <a th:if="${session.user}" class="nav-link avatar-with-name" id="navbarDropdownMenuLink"
                            data-toggle="dropdown" href="#">
-                            <img class="d-inline-block align-top" alt="">
+                            <img th:src="@{${session.user.avatar != null ? '/img/' + session.user.avatar : '/img/logo.png'}}"
+                                 class="d-inline-block align-top" alt="">
                         </a>
-                        <a th:unless="${session.get('user')}" class="nav-link" href="/login">登录/注册</a>
-                        <div th:if="${session.get('user')}" class="dropdown-menu dropdown-menu-right"
+                        <a th:unless="${session.user}" class="nav-link" href="/login">登录/注册</a>
+                        <div th:if="${session.user}" class="dropdown-menu dropdown-menu-right"
                              aria-labelledby="navbarDropdownMenuLink">
                             <span class="dropdown-item" th:text="${session.user.username}"></span>
                             <div class="dropdown-divider"></div>

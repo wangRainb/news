@@ -41,6 +41,7 @@ public class NewsController {
             throw new RuntimeException();
         } else {
             News news = newsService.getNews(id);
+            newsService.updateNewsView(id);
             model.addAttribute("news", news);
             List<News> relatedNews = newsService.getRelatedNews(news.getId(), news.getCid());
             model.addAttribute("relatedNews", relatedNews);

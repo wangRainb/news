@@ -263,7 +263,7 @@
         },
         methods: {
             getCategoryList() {
-                axios.get('/admin/category/getCategories')
+                axios.get('/category/getCategories')
                     .then(res => {
                         console.log(res)
                         this.categories = res.data.msg

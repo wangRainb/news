@@ -51,4 +51,14 @@ public interface NewsService {
      * @param file
      */
     void updateNews(News news, MultipartFile file) throws IOException;
+
+    /**
+     * 获取新闻列表
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param categoryId
+     * @return Page<News>
+     */
+    Page<News> getNewsList(Integer pageNum, Integer pageSize, String categoryId);
 }

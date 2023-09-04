@@ -26,8 +26,7 @@ public class IndexController {
     }
 
     @GetMapping("/index")
-    public String index(Model model) {
-        model.addAttribute("categories", categoryService.getCategoryList());
+    public String index() {
         return "index";
     }
 }

@@ -24,7 +24,7 @@ public class CategoryController {
         return "admin/category";
     }
 
-    @GetMapping("/admin/category/getCategories")
+    @GetMapping("/category/getCategories")
     @ResponseBody
     public JsonResult getCategoryList() {
         Map<String, Object> map = new HashMap<>();

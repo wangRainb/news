@@ -219,7 +219,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row" v-if="totalElements>=10">
                                             <div class="col-sm-12 col-md-5">
                                                 <div class="dataTables_info" id="DataTables_Table_0_info" role="status"
                                                      aria-live="polite">
@@ -299,7 +299,7 @@
         },
         methods: {
             getCategoryList() {
-                axios.get('/admin/category/getCategories')
+                axios.get('/category/getCategories')
                     .then(res => {
                         console.log(res)
                         this.categories = res.data.msg

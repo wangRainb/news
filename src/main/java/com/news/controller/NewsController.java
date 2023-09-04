@@ -51,6 +51,23 @@ public class NewsController {
         return JsonResult.ok(map);
     }
 
+    @GetMapping("/news/getNews")
+    @ResponseBody
+    public JsonResult getNewsList(@RequestParam("pageNum") Integer pageNum,
+                                  @RequestParam("pageSize") Integer pageSize,
+                                  @RequestParam("categoryId") String categoryId) {
+        if (pageNum == null) {
+            pageNum = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        Page<News> page = newsService.getNewsList(pageNum, pageSize, categoryId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", JSON.toJSONString(page));
+        return JsonResult.ok(map);
+    }
+
     @GetMapping("/admin/news/addNews")
     public String addNewsView(Model model) {
         model.addAttribute("categories", categoryService.getCategoryList());

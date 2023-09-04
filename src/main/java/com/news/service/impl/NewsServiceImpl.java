@@ -58,8 +58,8 @@ public class NewsServiceImpl implements NewsService {
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
         Page<News> page = newsDao.findAll(specification, pageRequest);
         //返回的数据都封装在了Page<News>对象中
-        page.getContent().forEach(user -> {
-            user.setCategory(categoryDao.findById(user.getCid()).get());
+        page.getContent().forEach(news -> {
+            news.setCategory(categoryDao.findById(news.getCid()).get());
         });
         return page;
     }
@@ -106,5 +106,28 @@ public class NewsServiceImpl implements NewsService {
         }
         news.setCreateTime(optionalNews.get().getCreateTime());
         newsDao.save(news);
+    }
+
+    @Override
+    public Page<News> getNewsList(Integer pageNum, Integer pageSize, String categoryId) {
+        //查询条件存在这个对象中
+        //重新Specification的toPredicate方法
+        Specification<News> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            Integer cid = null;
+            if (!StringUtils.isNullOrEmpty(categoryId)) {
+                cid = Integer.valueOf(categoryId);
+            }
+            if (cid == null) {
+                throw new RuntimeException();
+            } else {
+                Predicate predicate = criteriaBuilder.equal(root.get("cid"), cid);
+                return predicate;
+            }
+        };
+        //分页条件存在这个对象中
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "createTime"));
+        //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
+        Page<News> page = newsDao.findAll(specification, pageRequest);
+        return page;
     }
 }

@@ -3,7 +3,6 @@ package com.news.service;
 import com.news.pojo.Category;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author 18786
@@ -45,12 +44,4 @@ public interface CategoryService {
      * @return boolean
      */
     boolean deleteCategory(Integer id);
-
-    /**
-     * 通过id获取栏目
-     *
-     * @param id
-     * @return Optional<Category>
-     */
-    Optional<Category> getCategoryById(Integer id);
 }

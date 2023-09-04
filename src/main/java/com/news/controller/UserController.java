@@ -38,7 +38,7 @@ public class UserController {
             pageSize = 10;
         }
         Page<User> page = userService.getUserList(pageNum, pageSize, username);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("msg", JSON.toJSONString(page));
         return JsonResult.ok(map);
     }

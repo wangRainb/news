@@ -20,6 +20,8 @@ import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -129,5 +131,23 @@ public class NewsServiceImpl implements NewsService {
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
         Page<News> page = newsDao.findAll(specification, pageRequest);
         return page;
+    }
+
+    @Override
+    public List<News> getRelatedNews(Integer id, Integer cid) {
+        //查询条件存在这个对象中
+        //重新Specification的toPredicate方法
+        Specification<News> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("cid"), cid);
+            Predicate predicate1 = criteriaBuilder.notEqual(root.get("id"), id);
+            Predicate predicate2 = criteriaBuilder.and(predicate, predicate1);
+            return predicate2;
+        };
+        //分页条件存在这个对象中
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createTime"));
+        //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
+        Page<News> page = newsDao.findAll(specification, pageRequest);
+        List<News> newsList = page.getContent();
+        return newsList;
     }
 }

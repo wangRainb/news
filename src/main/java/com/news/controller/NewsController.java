@@ -2,7 +2,6 @@ package com.news.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.mysql.cj.util.StringUtils;
-import com.news.pojo.Category;
 import com.news.pojo.News;
 import com.news.service.CategoryService;
 import com.news.service.NewsService;
@@ -16,7 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author 18786
@@ -29,8 +31,21 @@ public class NewsController {
     private CategoryService categoryService;
 
     @GetMapping("/admin/news")
-    public String newsView() {
+    public String newsListView() {
         return "admin/news";
+    }
+
+    @GetMapping("/news/{id}")
+    public String newsView(@PathVariable Integer id, Model model) {
+        if (id == null) {
+            throw new RuntimeException();
+        } else {
+            News news = newsService.getNews(id);
+            model.addAttribute("news", news);
+            List<News> relatedNews = newsService.getRelatedNews(news.getId(), news.getCid());
+            model.addAttribute("relatedNews", relatedNews);
+            return "news";
+        }
     }
 
     @GetMapping("/admin/news/getNews")
@@ -46,7 +61,7 @@ public class NewsController {
             pageSize = 10;
         }
         Page<News> page = newsService.getNewsList(pageNum, pageSize, categoryId, search);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("msg", JSON.toJSONString(page));
         return JsonResult.ok(map);
     }
@@ -63,7 +78,7 @@ public class NewsController {
             pageSize = 10;
         }
         Page<News> page = newsService.getNewsList(pageNum, pageSize, categoryId);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("msg", JSON.toJSONString(page));
         return JsonResult.ok(map);
     }

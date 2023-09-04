@@ -27,7 +27,7 @@ public class CategoryController {
     @GetMapping("/category/getCategories")
     @ResponseBody
     public JsonResult getCategoryList() {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("msg", categoryService.getCategoryList());
         return JsonResult.ok(map);
     }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author 18786
@@ -26,6 +27,7 @@ public interface NewsService {
      *
      * @param news
      * @param img
+     * @throws IOException
      */
     void addNews(News news, byte[] img) throws IOException;
 
@@ -49,6 +51,7 @@ public interface NewsService {
      *
      * @param news
      * @param file
+     * @throws IOException
      */
     void updateNews(News news, MultipartFile file) throws IOException;
 
@@ -61,4 +64,13 @@ public interface NewsService {
      * @return Page<News>
      */
     Page<News> getNewsList(Integer pageNum, Integer pageSize, String categoryId);
+
+    /**
+     * 获取相关新闻
+     *
+     * @param id
+     * @param cid
+     * @return List<News>
+     */
+    List<News> getRelatedNews(Integer id, Integer cid);
 }

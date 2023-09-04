@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author 18786
@@ -50,10 +49,5 @@ public class CategoryServiceImpl implements CategoryService {
             categoryDao.deleteById(id);
             return true;
         }
-    }
-
-    @Override
-    public Optional<Category> getCategoryById(Integer id) {
-        return categoryDao.findById(id);
     }
 }

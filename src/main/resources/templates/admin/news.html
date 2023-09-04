@@ -80,7 +80,7 @@
                 </li>
 
                 <li class="sidebar-nav-item">
-                    <a href="#" class="sidebar-nav-link active">
+                    <a href="/admin/notice" class="sidebar-nav-link active">
                         <span class="sidebar-nav-icon">
                             <i class="fa fa-bell fa-lg"></i>
                         </span>
@@ -237,8 +237,9 @@
                                                                class="page-link"
                                                                @click="previous(pageNum-1)">上一页</a>
                                                         </li>
-                                                        <li class="paginate_button page-item active"
-                                                            v-for="(item, index) in totalPages">
+                                                        <li class="paginate_button page-item"
+                                                            v-for="(item, index) in totalPages"
+                                                            :class="{'active':index===pageNum}">
                                                             <a aria-controls="DataTables_Table_0"
                                                                tabindex="0"
                                                                class="page-link"

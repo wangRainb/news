@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>X新闻网后台管理 - 栏目管理</title>
+    <title>X新闻网后台管理 - 公告管理</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
@@ -103,20 +103,34 @@
                     <nav aria-label="breadcrumb" role="navigation">
                         <ol class="breadcrumb adminx-page-breadcrumb">
                             <li class="breadcrumb-item"><a href="/admin/index">首页</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">栏目管理</li>
+                            <li class="breadcrumb-item active" aria-current="page">公告管理</li>
                         </ol>
                     </nav>
 
                     <div class="pb-3">
-                        <h1>栏目管理</h1>
-                        <button class="btn btn-primary" style="margin: 10px auto 10px 15px" data-toggle="modal"
-                                data-target="#exampleModal">添加栏目
-                        </button>
+                        <h1>公告管理</h1>
+                        <a href="/admin/notice/addNotice" class="btn btn-primary"
+                           style="margin: 10px auto 10px 15px">添加公告</a>
                         <div class="col">
                             <div class="card mb-grid">
                                 <div class="table-responsive-md">
                                     <div id="DataTables_Table_0_wrapper"
                                          class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <div class="dataTables_length" id="DataTables_Table_0_length"><label>显示
+                                                    <select name="DataTables_Table_0_length"
+                                                            aria-controls="DataTables_Table_0"
+                                                            class="form-control form-control-sm"
+                                                            v-model="pageSize"
+                                                            @mouseleave="changePageSize">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select> 条</label></div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <table class="table table-actions table-striped table-hover mb-0 dataTable no-footer"
@@ -127,12 +141,17 @@
                                                         <th scope="col" tabindex="0"
                                                             aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                                                             aria-label="First Name: activate to sort column ascending"
-                                                            style="width: 500px;">编号
+                                                            style="width: 228px;">编号
                                                         </th>
                                                         <th scope="col" tabindex="0"
                                                             aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                                                             aria-label="Last Name: activate to sort column descending"
-                                                            style="width: 500px;" aria-sort="ascending">栏目名
+                                                            style="width: 400px;" aria-sort="ascending">标题
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Last Name: activate to sort column descending"
+                                                            style="width: 400px;" aria-sort="ascending">发布日期
                                                         </th>
                                                         <th scope="col" rowspan="1" colspan="1"
                                                             aria-label="Actions" style="width: 102px;">操作
@@ -140,17 +159,13 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr role="row" class="odd" v-for="(item, index) in categories">
+                                                    <tr role="row" class="odd" v-for="(item, index) in notices">
                                                         <td>{{index + 1}}</td>
-                                                        <td>{{item.name}}</td>
+                                                        <td>{{item.title}}</td>
+                                                        <td>{{item.createTime}}</td>
                                                         <td>
-                                                            <button class="btn btn-sm btn-warning"
-                                                                    @click="category.id=item.id"
-                                                                    data-toggle="modal"
-                                                                    data-target="#exampleModal1">修改
-                                                            </button>
                                                             <button class="btn btn-sm btn-danger"
-                                                                    @click="deleteCategory(item.id)">删除
+                                                                    @click="deleteNotice(item.id)">删除
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -158,71 +173,43 @@
                                                 </table>
                                             </div>
                                         </div>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="exampleModal" tabindex="-1"
-                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title"
-                                                            id="exampleModalLabel">添加栏目</h5>
-                                                        <button type="button" class="close"
-                                                                data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <input class="form-control"
-                                                               placeholder="栏目名" v-model="category.name">
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button"
-                                                                class="btn btn-secondary"
-                                                                data-dismiss="modal">关闭
-                                                        </button>
-                                                        <button type="button"
-                                                                class="btn btn-primary"
-                                                                @click="addCategory">提交
-                                                        </button>
-                                                    </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-5">
+                                                <div class="dataTables_info" id="DataTables_Table_0_info" role="status"
+                                                     aria-live="polite">
+                                                    共{{totalElements}}条数据，当前{{totalPages === 0 ? pageNum : pageNum + 1}}/{{totalPages}}页
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 col-md-7">
+                                                <div class="dataTables_paginate paging_simple_numbers"
+                                                     id="DataTables_Table_0_paginate">
+                                                    <ul class="pagination">
+                                                        <li class="paginate_button page-item previous"
+                                                            id="DataTables_Table_0_previous">
+                                                            <a aria-controls="DataTables_Table_0"
+                                                               tabindex="0"
+                                                               class="page-link"
+                                                               @click="previous(pageNum-1)">上一页</a>
+                                                        </li>
+                                                        <li class="paginate_button page-item"
+                                                            v-for="(item, index) in totalPages"
+                                                            :class="{'active':index===pageNum}">
+                                                            <a aria-controls="DataTables_Table_0"
+                                                               tabindex="0"
+                                                               class="page-link"
+                                                               @click="skip(index)">{{index + 1}}</a>
+                                                        </li>
+                                                        <li class="paginate_button page-item next"
+                                                            id="DataTables_Table_0_next">
+                                                            <a aria-controls="DataTables_Table_0"
+                                                               tabindex="0"
+                                                               class="page-link"
+                                                               @click="next(pageNum+1)">下一页</a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="exampleModal1" tabindex="-1"
-                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title"
-                                                            id="exampleModalLabel1">修改栏目</h5>
-                                                        <button type="button" class="close"
-                                                                data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <input class="form-control"
-                                                               placeholder="栏目名" v-model="category.name">
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button"
-                                                                class="btn btn-secondary"
-                                                                data-dismiss="modal">关闭
-                                                        </button>
-                                                        <button type="button"
-                                                                class="btn btn-primary"
-                                                                @click="updateCategory">提交
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -255,65 +242,38 @@
     const app = new Vue({
         el: '#app',
         data: {
-            categories: [],
-            category: {
-                id: 0,
-                name: ''
-            }
+            pageSize: 10,
+            pageNum: 0,
+            totalElements: 0,
+            totalPages: 0,
+            notices: [],
         },
         methods: {
-            getCategoryList() {
-                axios.get('/admin/category/getCategories')
+            getNoticeList() {
+                axios.get('/admin/notice/getNotices', {
+                    params: {
+                        pageNum: this.pageNum,
+                        pageSize: this.pageSize,
+                    }
+                })
                     .then(res => {
-                        console.log(res)
-                        this.categories = res.data.msg
+                        const msg = JSON.parse(res.data.msg)
+                        console.log(msg)
+                        this.notices = msg.content
+                        this.totalElements = msg.totalElements
+                        this.totalPages = msg.totalPages
+                        this.notices.forEach(notice => {
+                            if (notice.createTime != null) {
+                                notice.createTime = notice.createTime.replace('T', ' ')
+                            }
+                        })
                     })
                     .catch(error => {
                         console.log(error);
                     })
             },
-            addCategory() {
-                if (this.category.name === '') {
-                    toastr.error('栏目名不能为空')
-                } else {
-                    axios.post('/admin/category/addCategory', this.category)
-                        .then(res => {
-                            console.log(res)
-                            if (res.data.code === 0) {
-                                this.getCategoryList()
-                                toastr.success(res.data.msg)
-                            } else {
-                                toastr.error(res.data.msg)
-                            }
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        })
-                }
-            },
-            updateCategory() {
-                if (this.category.name === '') {
-                    toastr.error('栏目名不能为空')
-                } else {
-                    axios.post('/admin/category/updateCategory', {
-                        id: this.category.id,
-                        name: this.category.name
-                    })
-                        .then(res => {
-                            console.log(res)
-                            if (res.data.code === 0) {
-                                this.getCategoryList()
-                                toastr.success(res.data.msg)
-                            } else {
-                                toastr.error(res.data.msg)
-                            }
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        })
-                }
-            },
-            deleteCategory(id) {
+            deleteNotice(id) {
+                console.log(id)
                 bootbox.confirm({
                     size: "small",
                     message: "确定删除吗？",
@@ -329,26 +289,49 @@
                     },
                     callback: function (result) {
                         if (result) {
-                            axios.post('/admin/category/deleteCategory/' + id)
+                            axios.post('/admin/news/deleteNotice/' + id)
                                 .then(res => {
                                     console.log(res)
-                                    if (res.data.code === 0) {
-                                        app.getCategoryList()
-                                        toastr.success(res.data.msg)
-                                    } else {
-                                        toastr.error(res.data.msg)
-                                    }
+                                    app.getNoticeList()
+                                    toastr.success('删除成功')
                                 })
-                                .catch(error => {
-                                    console.log(error);
-                                })
+                                .catch(res => {
+                                    console.log(res)
+                                });
                         }
                     }
                 })
+            },
+            previous(pageNum) {
+                pageNum = (pageNum >= 0) ? pageNum : 0;
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getNoticeList()
+            },
+            skip(pageNum) {
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getNoticeList()
+            },
+            next(pageNum) {
+                pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getNoticeList()
+            },
+            changePageSize() {
+                console.log(this.pageSize)
+                this.getNoticeList()
             }
         },
         mounted() {
-            this.getCategoryList()
+            this.getNoticeList()
+        },
+        watch: {
+            pageNum: function (newVal) {
+                this.pageNum = newVal
+                console.log(this.pageNum)
+            }
         }
     })
 </script>

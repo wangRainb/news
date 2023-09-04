@@ -1,10 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>404</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
 </head>
 <body>
+<div class="adminx-container d-flex justify-content-center align-items-center">
+    <div class="page-error">
+        <div class="error-code">
+            404
+        </div>
+        <h1>未找到资源</h1>
 
+        <p class="text-muted mb-5">
+            跑丢啦！
+        </p>
+
+        <a href="/index" class="btn btn-primary">返回首页</a>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script th:src="@{/dist/js/vendor.js}"></script>
+<script th:src="@{/dist/js/adminx.js}"></script>
+
+<!-- If you prefer vanilla JS these are the only required scripts -->
+<!-- script src="../dist/js/vendor.js"></script>
+<script src="../dist/js/adminx.vanilla.js"></script-->
 </body>
 </html>

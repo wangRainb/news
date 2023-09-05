@@ -74,7 +74,7 @@
                         <a th:unless="${session.get('user')}" class="nav-link" href="/login">登录/注册</a>
                         <div th:if="${session.get('user')}" class="dropdown-menu dropdown-menu-right"
                              aria-labelledby="navbarDropdownMenuLink">
-                            <span class="dropdown-item" th:text="${session.user.username}"></span>
+                            <span class="dropdown-item disabled" th:text="${session.user.username}"></span>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-primary" href="#">个人中心</a>
                             <div class="dropdown-divider"></div>
@@ -122,13 +122,14 @@
                             <div class="card mb-grid">
                                 <div class="card-header">
                                     <div class="card-header-title">
-                                        网友评论<span style="float: right" th:text="'评论数：'"></span>
+                                        网友评论<span style="float: right">评论数：{{commentCount}}</span>
                                     </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="col-md-12">
-                                            <textarea class="form-control" rows="6" placeholder="我有话要说。。。"></textarea>
+                                            <textarea v-model="comment.content" class="form-control" rows="6"
+                                                      placeholder="我有话要说。。。"></textarea>
                                             <div class="row" style="margin-top: 10px;">
                                                 <div class="col-sm-10" style="text-align: right">
                                                     <span class="nav-link" th:unless="${session.user}">必须登录才能发表评论</span>
@@ -136,14 +137,13 @@
                                                 <div class="col-sm-2">
                                                     <a href="/login" class="nav-link"
                                                        th:unless="${session.user}">登录</a>
-                                                    <button class="btn btn-primary" th:if="${session.user}">发表</button>
+                                                    <div th:if="${session.user}">
+                                                        <input id="uid" type="hidden" th:value="${session.user.id}">
+                                                        <button class="btn btn-primary" @click="addComment">发表</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="comment">
-
                                     </div>
                                 </div>
                             </div>
@@ -159,6 +159,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
 
 <!-- If you prefer vanilla JS these are the only required scripts -->
 <!-- script src="../dist/js/vendor.js"></script>
@@ -169,19 +170,26 @@
         el: '#app',
         data: {
             comments: [],
-            nid: 0,
             pageSize: 10,
             pageNum: 0,
             totalElements: 0,
             totalPages: 0,
+            comment: {
+                id: 0,
+                nid: 0,
+                uid: 0,
+                content: '',
+                createTime: ''
+            },
+            commentCount: 0
         },
         methods: {
             getCommentList() {
                 axios.get('/comment/getComments', {
                     params: {
+                        nid: this.comment.nid,
                         pageNum: this.pageNum,
                         pageSize: this.pageSize,
-                        nid: this.nid
                     }
                 })
                     .then(res => {
@@ -191,6 +199,30 @@
                     .catch(error => {
                         console.log(error);
                     })
+                this.getCommentCount()
+            },
+            getCommentCount() {
+                axios.get('/comment/getCommentCount/' + this.comment.nid)
+                    .then(res => {
+                        console.log(res)
+                        this.commentCount = res.data.msg
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            addComment() {
+                this.comment.uid = $('#uid').val()
+                console.log(this.comment)
+                axios.post('/comment/addComment', this.comment)
+                    .then(res => {
+                        console.log(res)
+                        this.getCommentList()
+                        toastr.success(res.data.msg)
+                    })
+                    .catch(res => {
+                        console.log(res)
+                    });
             },
             previous(pageNum) {
                 pageNum = (pageNum >= 0) ? pageNum : 0;
@@ -216,7 +248,7 @@
         },
         mounted() {
             const url = window.location.pathname
-            this.nid = url.substring(url.lastIndexOf('/') + 1, url.length)
+            this.comment.nid = url.substring(url.lastIndexOf('/') + 1, url.length)
             console.log(this.nid)
             this.getCommentList()
         },

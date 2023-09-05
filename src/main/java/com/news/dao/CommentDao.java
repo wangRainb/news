@@ -10,4 +10,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CommentDao extends JpaRepository<Comment, Integer>, JpaSpecificationExecutor<Comment> {
+    /**
+     * 获取新闻评论数
+     *
+     * @param nid
+     * @return int
+     */
+    int countByNid(Integer nid);
 }

@@ -61,7 +61,7 @@
                         <a th:unless="${session.user}" class="nav-link" href="/login">登录/注册</a>
                         <div th:if="${session.user}" class="dropdown-menu dropdown-menu-right"
                              aria-labelledby="navbarDropdownMenuLink">
-                            <span class="dropdown-item" th:text="${session.user.username}"></span>
+                            <span class="dropdown-item disabled" th:text="${session.user.username}"></span>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-primary" href="#">个人中心</a>
                             <div class="dropdown-divider"></div>

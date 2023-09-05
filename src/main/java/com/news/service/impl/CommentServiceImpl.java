@@ -43,7 +43,18 @@ public class CommentServiceImpl implements CommentService {
         commentList.forEach(comment -> {
             comment.setNews(newsService.getNews(comment.getNid()));
             comment.setUser(userService.getUser(comment.getUid()));
+            comment.getUser().setPassword(null);
         });
         return page;
+    }
+
+    @Override
+    public int getCommentCount(Integer nid) {
+        return commentDao.countByNid(nid);
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        commentDao.save(comment);
     }
 }

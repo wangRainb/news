@@ -13,7 +13,7 @@
             text-indent: 2em
         }
 
-        h5 {
+        h1 {
             font-weight: bold;
         }
 
@@ -92,7 +92,12 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title" th:text="${news.title}"></h5>
+                                    <h1 class="card-title" th:text="${news.title}"></h1>
+                                    <span style="color: rgba(0,0,0,.5);"
+                                          th:text="${news.createTime.toString().replace('T', ' ')}"></span>
+                                    <span style="color: rgba(0,0,0,.5);float: right;"
+                                          th:text="${'浏览量：'+news.views}"></span>
+                                    <hr/>
                                     <img th:unless="${news.img eq '' || news.img eq null}"
                                          th:src="@{'/img/' + ${news.img}}"
                                          class="card-img-top">
@@ -103,6 +108,7 @@
                         </div>
                         <div class="col-md-6">
                             <ul class="list-group" th:unless="${relatedNews.isEmpty()}">
+                                <li class="list-group-item">相关新闻</li>
                                 <li class="list-group-item" th:each="item : ${relatedNews}">
                                     <a class="nav-link" th:href="${'/news/' + item.id}"
                                        th:text="${item.title}"></a>
@@ -116,7 +122,7 @@
                             <div class="card mb-grid">
                                 <div class="card-header">
                                     <div class="card-header-title">
-                                        网友评论<span style="text-align: right" th:text="'评论数：'"></span>
+                                        网友评论<span style="float: right" th:text="'评论数：'"></span>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -159,6 +165,62 @@
 <script src="../dist/js/adminx.vanilla.js"></script-->
 
 <script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            comments: [],
+            nid: 0,
+            pageSize: 10,
+            pageNum: 0,
+            totalElements: 0,
+            totalPages: 0,
+        },
+        methods: {
+            getCommentList() {
+                axios.get('/comment/getComments', {
+                    params: {
+                        pageNum: this.pageNum,
+                        pageSize: this.pageSize,
+                        nid: this.nid
+                    }
+                })
+                    .then(res => {
+                        console.log(res)
+                        this.comments = res.data.msg
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            },
+            previous(pageNum) {
+                pageNum = (pageNum >= 0) ? pageNum : 0;
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getCommentList()
+            },
+            skip(pageNum) {
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getCommentList()
+            },
+            next(pageNum) {
+                pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
+                console.log(pageNum)
+                this.pageNum = pageNum
+                this.getCommentList()
+            },
+            changePageSize() {
+                console.log(this.pageSize)
+                this.getCommentList()
+            }
+        },
+        mounted() {
+            const url = window.location.pathname
+            this.nid = url.substring(url.lastIndexOf('/') + 1, url.length)
+            console.log(this.nid)
+            this.getCommentList()
+        },
+    })
 </script>
 </body>
 </html>

@@ -60,4 +60,12 @@ public interface UserService {
      * 检查封号用户是否到解封时间
      */
     void checkLockDate();
+
+    /**
+     * 获取用户
+     *
+     * @param id
+     * @return User
+     */
+    User getUser(Integer id);
 }

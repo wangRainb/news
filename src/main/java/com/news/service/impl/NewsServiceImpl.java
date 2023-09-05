@@ -156,4 +156,19 @@ public class NewsServiceImpl implements NewsService {
         news.setViews(news.getViews() + 1);
         newsDao.save(news);
     }
+
+    @Override
+    public long getNewsCount() {
+        return newsDao.count();
+    }
+
+    @Override
+    public long getViewCount() {
+        List<News> newsList = newsDao.findAll();
+        long sum = 0L;
+        for (News news : newsList) {
+            sum += news.getViews();
+        }
+        return sum;
+    }
 }

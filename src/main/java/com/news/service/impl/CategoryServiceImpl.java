@@ -8,7 +8,9 @@ import com.news.service.CategoryService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 18786
@@ -49,5 +51,15 @@ public class CategoryServiceImpl implements CategoryService {
             categoryDao.deleteById(id);
             return true;
         }
+    }
+
+    @Override
+    public Map<String, Long> getCategory() {
+        List<Category> categoryList = categoryDao.findAll();
+        Map<String, Long> map = new HashMap<>(16);
+        for (Category category : categoryList) {
+            map.put(category.getName(), newsDao.countByCid(category.getId()));
+        }
+        return map;
     }
 }

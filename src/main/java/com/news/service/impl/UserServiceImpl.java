@@ -100,4 +100,9 @@ public class UserServiceImpl implements UserService {
     public User getUser(Integer id) {
         return userDao.findById(id).get();
     }
+
+    @Override
+    public long getUserCount() {
+        return userDao.count();
+    }
 }

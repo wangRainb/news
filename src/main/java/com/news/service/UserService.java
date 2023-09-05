@@ -68,4 +68,11 @@ public interface UserService {
      * @return User
      */
     User getUser(Integer id);
+
+    /**
+     * 获取用户总数
+     *
+     * @return
+     */
+    long getUserCount();
 }

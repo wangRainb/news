@@ -63,4 +63,9 @@ public class CommentServiceImpl implements CommentService {
     public boolean isUserMakeComment(Integer nid, Integer uid) {
         return commentDao.existsCommentByUidAndNid(uid, nid);
     }
+
+    @Override
+    public long getCommentCount() {
+        return commentDao.count();
+    }
 }

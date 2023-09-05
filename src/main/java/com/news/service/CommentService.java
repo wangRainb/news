@@ -39,4 +39,11 @@ public interface CommentService {
      * @return
      */
     boolean isUserMakeComment(Integer nid, Integer uid);
+
+    /**
+     * 获取评论总数
+     *
+     * @return
+     */
+    long getCommentCount();
 }

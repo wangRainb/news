@@ -80,4 +80,18 @@ public interface NewsService {
      * @param id
      */
     void updateNewsView(Integer id);
+
+    /**
+     * 获取新闻总数
+     *
+     * @return
+     */
+    long getNewsCount();
+
+    /**
+     * 获取总浏览量
+     *
+     * @return
+     */
+    long getViewCount();
 }

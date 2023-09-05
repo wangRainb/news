@@ -19,4 +19,12 @@ public interface NewsDao extends JpaRepository<News, Integer>, JpaSpecificationE
      * @return List<News>
      */
     List<News> getAllByCid(Integer cid);
+
+    /**
+     * 通过栏目获取所有新闻数量
+     *
+     * @param cid
+     * @return
+     */
+    long countByCid(Integer cid);
 }

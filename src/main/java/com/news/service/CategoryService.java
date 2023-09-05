@@ -3,6 +3,7 @@ package com.news.service;
 import com.news.pojo.Category;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 18786
@@ -44,4 +45,11 @@ public interface CategoryService {
      * @return boolean
      */
     boolean deleteCategory(Integer id);
+
+    /**
+     * 获取所有栏目
+     *
+     * @return
+     */
+    Map<String, Long> getCategory();
 }

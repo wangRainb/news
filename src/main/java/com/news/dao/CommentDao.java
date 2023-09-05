@@ -17,4 +17,13 @@ public interface CommentDao extends JpaRepository<Comment, Integer>, JpaSpecific
      * @return int
      */
     int countByNid(Integer nid);
+
+    /**
+     * 判断用户是否在某新闻下评论过
+     *
+     * @param uid
+     * @param nid
+     * @return boolean
+     */
+    boolean existsCommentByUidAndNid(Integer uid, Integer nid);
 }

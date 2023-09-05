@@ -30,4 +30,13 @@ public interface CommentService {
      * @param comment
      */
     void addComment(Comment comment);
+
+    /**
+     * 判断用户是否在某新闻下评论过
+     *
+     * @param nid
+     * @param uid
+     * @return
+     */
+    boolean isUserMakeComment(Integer nid, Integer uid);
 }

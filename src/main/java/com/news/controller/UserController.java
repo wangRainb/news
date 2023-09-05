@@ -1,6 +1,5 @@
 package com.news.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.news.pojo.User;
 import com.news.service.UserService;
 import com.news.utils.JsonResult;
@@ -39,7 +38,7 @@ public class UserController {
         }
         Page<User> page = userService.getUserList(pageNum, pageSize, username);
         Map<String, Object> map = new HashMap<>(16);
-        map.put("msg", JSON.toJSONString(page));
+        map.put("msg", page);
         return JsonResult.ok(map);
     }
 

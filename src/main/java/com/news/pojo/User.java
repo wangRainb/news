@@ -1,5 +1,6 @@
 package com.news.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -27,6 +28,7 @@ public class User implements Serializable {
     @Column(name = "islocked")
     private boolean isLocked;
     @Column(name = "lockdate")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime lockDate;
     @Column(name = "lockdays")
     private Integer lockDays;

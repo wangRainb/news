@@ -60,4 +60,19 @@ public class CommentController {
         map.put("msg", commentService.getCommentCount(Integer.valueOf(nid)));
         return JsonResult.ok(map);
     }
+
+    @GetMapping("/comment/isUserMakeComment/")
+    @ResponseBody
+    public JsonResult isUserMakeComment(@RequestParam("nid") Integer nid,
+                                        @RequestParam("uid") Integer uid) {
+        if (nid == null || uid == null) {
+            return JsonResult.error("uid和nid不能为空！");
+        } else {
+            if (commentService.isUserMakeComment(nid, uid)) {
+                return JsonResult.ok();
+            } else {
+                return JsonResult.error();
+            }
+        }
+    }
 }

@@ -118,7 +118,7 @@
                     </div>
 
                     <div class="row" style="margin-top: 50px;">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="card mb-grid">
                                 <div class="card-header">
                                     <div class="card-header-title">
@@ -131,17 +131,74 @@
                                             <textarea v-model="comment.content" class="form-control" rows="6"
                                                       placeholder="我有话要说。。。"></textarea>
                                             <div class="row" style="margin-top: 10px;">
-                                                <div class="col-sm-10" style="text-align: right">
+                                                <div class="col-sm-11" style="text-align: right">
                                                     <span class="nav-link" th:unless="${session.user}">必须登录才能发表评论</span>
                                                 </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-1">
                                                     <a href="/login" class="nav-link"
                                                        th:unless="${session.user}">登录</a>
                                                     <div th:if="${session.user}">
                                                         <input id="uid" type="hidden" th:value="${session.user.id}">
-                                                        <button class="btn btn-primary" @click="addComment">发表</button>
+                                                        <button class="btn btn-primary" @click="addComment">发表
+                                                        </button>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="media" v-for="item in comments">
+                                                <img width="64px" height="64px"
+                                                     :src="item.user.avatar != null ? '/img/'+item.user.avatar : '/img/logo.png'"
+                                                     class="mr-3">
+                                                <div class="media-body">
+                                                    <h5 class="mt-0 text-primary" :ref="item.user">
+                                                        {{item.user.username}}</h5>
+                                                    <p>{{item.content}}
+                                                        <span style="float: right;">{{item.createTime}}</span>
+                                                    </p>
+                                                    <hr/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" v-if="totalElements>=10">
+                                        <div class="col-sm-12 col-md-8">
+                                            <div id="DataTables_Table_0_info" role="status"
+                                                 aria-live="polite">
+                                                共{{totalElements}}条数据，当前{{totalPages === 0 ? pageNum : pageNum + 1}}/{{totalPages}}页
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4">
+                                            <div class="paging_simple_numbers"
+                                                 id="DataTables_Table_0_paginate">
+                                                <ul class="pagination">
+                                                    <li class="paginate_button page-item previous"
+                                                        id="DataTables_Table_0_previous">
+                                                        <a aria-controls="DataTables_Table_0"
+                                                           tabindex="0"
+                                                           class="page-link"
+                                                           @click="previous(pageNum-1)">上一页</a>
+                                                    </li>
+                                                    <li class="paginate_button page-item"
+                                                        v-for="(item, index) in totalPages"
+                                                        :class="{'active':index===pageNum}">
+                                                        <a aria-controls="DataTables_Table_0"
+                                                           tabindex="0"
+                                                           class="page-link"
+                                                           @click="skip(index)">{{index + 1}}</a>
+                                                    </li>
+                                                    <li class="paginate_button page-item next"
+                                                        id="DataTables_Table_0_next">
+                                                        <a aria-controls="DataTables_Table_0"
+                                                           tabindex="0"
+                                                           class="page-link"
+                                                           @click="next(pageNum+1)">下一页</a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -193,8 +250,16 @@
                     }
                 })
                     .then(res => {
-                        console.log(res)
-                        this.comments = res.data.msg
+                        const msg = res.data.msg
+                        console.log(msg)
+                        this.comments = msg.content
+                        this.totalElements = msg.totalElements
+                        this.totalPages = msg.totalPages
+                        // this.comments.forEach(comment => {
+                        //     if (comment.createTime != null) {
+                        //         comment.createTime = comment.createTime.replace('T', ' ')
+                        //     }
+                        // })
                     })
                     .catch(error => {
                         console.log(error);
@@ -212,17 +277,21 @@
                     })
             },
             addComment() {
-                this.comment.uid = $('#uid').val()
-                console.log(this.comment)
-                axios.post('/comment/addComment', this.comment)
-                    .then(res => {
-                        console.log(res)
-                        this.getCommentList()
-                        toastr.success(res.data.msg)
-                    })
-                    .catch(res => {
-                        console.log(res)
-                    });
+                this.comment.uid = document.getElementById('uid').value
+                if (this.comment.content == '') {
+                    toastr.warning('评论不能为空！')
+                } else {
+                    console.log(this.comment)
+                    axios.post('/comment/addComment', this.comment)
+                        .then(res => {
+                            console.log(res)
+                            this.getCommentList()
+                            toastr.success(res.data.msg)
+                        })
+                        .catch(res => {
+                            console.log(res)
+                        });
+                }
             },
             previous(pageNum) {
                 pageNum = (pageNum >= 0) ? pageNum : 0;
@@ -249,9 +318,8 @@
         mounted() {
             const url = window.location.pathname
             this.comment.nid = url.substring(url.lastIndexOf('/') + 1, url.length)
-            console.log(this.nid)
             this.getCommentList()
-        },
+        }
     })
 </script>
 </body>

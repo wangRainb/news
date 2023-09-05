@@ -1,5 +1,6 @@
 package com.news.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,5 +19,6 @@ public class Notice {
     private String title;
     private String content;
     @Column(name = "createtime")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
 }

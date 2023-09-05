@@ -1,6 +1,7 @@
 package com.news.service.impl;
 
 import com.news.dao.CommentDao;
+import com.news.dao.NewsDao;
 import com.news.pojo.Comment;
 import com.news.service.CommentService;
 import com.news.service.NewsService;
@@ -40,11 +41,11 @@ public class CommentServiceImpl implements CommentService {
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
         Page<Comment> page = commentDao.findAll(specification, pageRequest);
         List<Comment> commentList = page.getContent();
-        commentList.forEach(comment -> {
+        for (Comment comment : commentList) {
             comment.setNews(newsService.getNews(comment.getNid()));
             comment.setUser(userService.getUser(comment.getUid()));
             comment.getUser().setPassword(null);
-        });
+        }
         return page;
     }
 
@@ -56,5 +57,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void addComment(Comment comment) {
         commentDao.save(comment);
+    }
+
+    @Override
+    public boolean isUserMakeComment(Integer nid, Integer uid) {
+        return commentDao.existsCommentByUidAndNid(uid, nid);
     }
 }

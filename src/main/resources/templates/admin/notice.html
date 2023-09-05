@@ -257,16 +257,11 @@
                     }
                 })
                     .then(res => {
-                        const msg = JSON.parse(res.data.msg)
+                        const msg = res.data.msg
                         console.log(msg)
                         this.notices = msg.content
                         this.totalElements = msg.totalElements
                         this.totalPages = msg.totalPages
-                        this.notices.forEach(notice => {
-                            if (notice.createTime != null) {
-                                notice.createTime = notice.createTime.replace('T', ' ')
-                            }
-                        })
                     })
                     .catch(error => {
                         console.log(error);

@@ -1,6 +1,5 @@
 package com.news.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.mysql.cj.util.StringUtils;
 import com.news.pojo.Notice;
 import com.news.service.NoticeService;
@@ -39,7 +38,7 @@ public class NoticeController {
         }
         Page<Notice> page = noticeService.getNoticeList(pageNum, pageSize);
         Map<String, Object> map = new HashMap<>();
-        map.put("msg", JSON.toJSONString(page));
+        map.put("msg", page);
         return JsonResult.ok(map);
     }
 

@@ -1,6 +1,5 @@
 package com.news.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.news.service.CategoryService;
 import com.news.service.CommentService;
 import com.news.service.NewsService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.management.ObjectName;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -78,9 +78,10 @@ public class NewsController {
     @GetMapping("/search")
     public String searchView(@RequestParam(name = "search") String search,
                              @RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
-                             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                             @RequestParam(name = "pageSize", defaultValue = "1") Integer pageSize,
                              Model model) {
         model.addAttribute("news", newsService.getNewsLikeTitle(pageNum, pageSize, search));
+        model.addAttribute("search", search);
         return "search";
     }
 

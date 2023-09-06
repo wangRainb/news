@@ -95,6 +95,44 @@
                                     </li>
                                 </ul>
 
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="paging_simple_numbers"
+                                             id="DataTables_Table_0_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous"
+                                                    id="DataTables_Table_0_previous">
+                                                    <a aria-controls="DataTables_Table_0"
+                                                       tabindex="0"
+                                                       class="page-link"
+                                                       th:href="@{${news.pageable.pageNumber==0 ?
+                                                       '#' : '/search?search='+search+
+                                                       '?pageNum='+((news.pageable.pageNumber)-1)+
+                                                       '?pageSize='+news.pageable.pageSize}}"
+                                                    >上一页</a>
+                                                </li>
+                                                <li class="paginate_button page-item">
+                                                    <a aria-controls="DataTables_Table_0"
+                                                       tabindex="0"
+                                                       class="page-link"
+                                                       th:each="item : ${news.totalPages}"
+                                                    ></a>
+                                                </li>
+                                                <li class="paginate_button page-item next"
+                                                    id="DataTables_Table_0_next">
+                                                    <a aria-controls="DataTables_Table_0"
+                                                       tabindex="0"
+                                                       class="page-link"
+                                                       th:href="@{${news.pageable.pageNumber==((news.totalPages)-1) ?
+                                                       '#' : '/search?search='+search+
+                                                       '?pageNum='+((news.pageable.pageNumber)-1)+
+                                                       '?pageSize='+news.pageable.pageSize}}"
+                                                    >下一页</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,7 +143,7 @@
 </div>
 
 <!-- If you prefer jQuery these are the required scripts -->
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src=" https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 

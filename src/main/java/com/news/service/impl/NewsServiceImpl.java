@@ -177,4 +177,19 @@ public class NewsServiceImpl implements NewsService {
         }
         return sum;
     }
+
+    @Override
+    public Page<News> getNewsLikeTitle(Integer pageNum, Integer pageSize, String search) {
+        //查询条件存在这个对象中
+        //重新Specification的toPredicate方法
+        Specification<News> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.like(root.get("title"), search);
+            return predicate;
+        };
+        //分页条件存在这个对象中
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "createTime"));
+        //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
+        Page<News> page = newsDao.findAll(specification, pageRequest);
+        return page;
+    }
 }

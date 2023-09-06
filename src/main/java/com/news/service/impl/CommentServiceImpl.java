@@ -1,7 +1,6 @@
 package com.news.service.impl;
 
 import com.news.dao.CommentDao;
-import com.news.dao.NewsDao;
 import com.news.pojo.Comment;
 import com.news.service.CommentService;
 import com.news.service.NewsService;
@@ -42,7 +41,6 @@ public class CommentServiceImpl implements CommentService {
         Page<Comment> page = commentDao.findAll(specification, pageRequest);
         List<Comment> commentList = page.getContent();
         for (Comment comment : commentList) {
-            comment.setNews(newsService.getNews(comment.getNid()));
             comment.setUser(userService.getUser(comment.getUid()));
             comment.getUser().setPassword(null);
         }
@@ -67,5 +65,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public long getCommentCount() {
         return commentDao.count();
+    }
+
+    @Override
+    public void deleteComment(Integer id) {
+        commentDao.deleteById(id);
     }
 }

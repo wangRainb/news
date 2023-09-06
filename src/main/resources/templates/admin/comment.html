@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>X新闻网后台管理 - 公告管理</title>
+    <title>X新闻网后台管理 - 评论管理</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
@@ -103,14 +103,12 @@
                     <nav aria-label="breadcrumb" role="navigation">
                         <ol class="breadcrumb adminx-page-breadcrumb">
                             <li class="breadcrumb-item"><a href="/admin/index">首页</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">公告管理</li>
+                            <li class="breadcrumb-item active" aria-current="page">评论管理</li>
                         </ol>
                     </nav>
 
                     <div class="pb-3">
-                        <h1>公告管理</h1>
-                        <a href="/admin/notice/addNotice" class="btn btn-primary"
-                           style="margin: 10px auto 10px 15px">添加公告</a>
+                        <h1>评论管理</h1>
                         <div class="col">
                             <div class="card mb-grid">
                                 <div class="table-responsive-md">
@@ -145,12 +143,17 @@
                                                         <th scope="col" tabindex="0"
                                                             aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                                                             aria-label="Last Name: activate to sort column descending"
-                                                            style="width: 400px;" aria-sort="ascending">标题
+                                                            style="width: 400px;" aria-sort="ascending">评论用户
                                                         </th>
                                                         <th scope="col" tabindex="0"
                                                             aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                                                             aria-label="Last Name: activate to sort column descending"
-                                                            style="width: 400px;" aria-sort="ascending">发布日期
+                                                            style="width: 400px;" aria-sort="ascending">评论内容
+                                                        </th>
+                                                        <th scope="col" tabindex="0"
+                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                                            aria-label="Last Name: activate to sort column descending"
+                                                            style="width: 400px;" aria-sort="ascending">评论日期
                                                         </th>
                                                         <th scope="col" rowspan="1" colspan="1"
                                                             aria-label="Actions" style="width: 102px;">操作
@@ -158,13 +161,14 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr role="row" class="odd" v-for="(item, index) in notices">
+                                                    <tr role="row" class="odd" v-for="(item, index) in comments">
                                                         <td>{{index + 1}}</td>
-                                                        <td>{{item.title}}</td>
+                                                        <td>{{item.user.username}}</td>
+                                                        <td>{{item.content}}</td>
                                                         <td>{{item.createTime}}</td>
                                                         <td>
                                                             <button class="btn btn-sm btn-danger"
-                                                                    @click="deleteNotice(item.id)">删除
+                                                                    @click="deleteComment(item.id)">删除
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -245,12 +249,14 @@
             pageNum: 0,
             totalElements: 0,
             totalPages: 0,
-            notices: [],
+            comments: [],
+            nid: 0
         },
         methods: {
-            getNoticeList() {
-                axios.get('/admin/notice/getNotices', {
+            getCommentList() {
+                axios.get('/comment/getComments', {
                     params: {
+                        nid: this.nid,
                         pageNum: this.pageNum,
                         pageSize: this.pageSize,
                     }
@@ -258,7 +264,7 @@
                     .then(res => {
                         const msg = res.data.msg
                         console.log(msg)
-                        this.notices = msg.content
+                        this.comments = msg.content
                         this.totalElements = msg.totalElements
                         this.totalPages = msg.totalPages
                     })
@@ -266,7 +272,7 @@
                         console.log(error);
                     })
             },
-            deleteNotice(id) {
+            deleteComment(id) {
                 bootbox.confirm({
                     size: "small",
                     message: "确定删除吗？",
@@ -282,15 +288,19 @@
                     },
                     callback: function (result) {
                         if (result) {
-                            axios.post('/admin/news/deleteNotice/' + id)
+                            axios.post('/admin/comments/deleteComment/' + id)
                                 .then(res => {
                                     console.log(res)
-                                    app.getNoticeList()
-                                    toastr.success('删除成功')
+                                    if (res.data.code === 0) {
+                                        app.getCommentList()
+                                        toastr.success(res.data.msg)
+                                    } else {
+                                        toastr.error(res.data.msg)
+                                    }
                                 })
-                                .catch(res => {
-                                    console.log(res)
-                                });
+                                .catch(error => {
+                                    console.log(error);
+                                })
                         }
                     }
                 })
@@ -298,24 +308,26 @@
             previous(pageNum) {
                 pageNum = (pageNum >= 0) ? pageNum : 0;
                 this.pageNum = pageNum
-                this.getNoticeList()
+                this.getCommentList()
             },
             skip(pageNum) {
                 this.pageNum = pageNum
-                this.getNoticeList()
+                this.getCommentList()
             },
             next(pageNum) {
                 pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
                 this.pageNum = pageNum
-                this.getNoticeList()
+                this.getCommentList()
             }
         },
         mounted() {
-            this.getNoticeList()
+            const url = window.location.search
+            this.nid = url.substring(url.indexOf('=') + 1, url.length)
+            this.getCommentList()
         },
         watch: {
             pageSize: function () {
-                this.getNoticeList()
+                this.getCommentList()
             }
         }
     })

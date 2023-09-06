@@ -34,7 +34,7 @@
                         <a class="nav-link" href="/admin/index">后台管理</a>
                     </li>
                 </ul>
-                <form class="form-inline form-quicksearch d-none d-md-block mx-auto">
+                <form class="form-inline form-quicksearch d-none d-md-block mx-auto" method="get" action="/search">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <div class="input-group-icon">
@@ -46,8 +46,8 @@
                                 </svg>
                             </div>
                         </div>
-                        <input type="text" class="form-control" id="search" placeholder="新闻标题">
-                        <button type="button" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
+                        <input name="search" type="text" class="form-control" id="search" placeholder="新闻标题">
+                        <button type="submit" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
                     </div>
                 </form>
                 <ul class="navbar-nav d-flex justify-content-end mr-2">
@@ -206,23 +206,16 @@
             },
             previous(pageNum) {
                 pageNum = (pageNum >= 0) ? pageNum : 0;
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getNewsList()
             },
             skip(pageNum) {
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getNewsList()
             },
             next(pageNum) {
                 pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
-                console.log(pageNum)
                 this.pageNum = pageNum
-                this.getNewsList()
-            },
-            changePageSize() {
-                console.log(this.pageSize)
                 this.getNewsList()
             }
         },

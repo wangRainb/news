@@ -23,7 +23,5 @@ public class Comment {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime createTime;
     @Transient
-    private News news;
-    @Transient
     private User user;
 }

@@ -122,8 +122,7 @@
                                                     <select name="DataTables_Table_0_length"
                                                             aria-controls="DataTables_Table_0"
                                                             class="form-control form-control-sm"
-                                                            v-model="pageSize"
-                                                            @mouseleave="changePageSize">
+                                                            v-model="pageSize">
                                                         <option value="10">10</option>
                                                         <option value="25">25</option>
                                                         <option value="50">50</option>
@@ -135,8 +134,7 @@
                                                     <select name="DataTables_Table_0_length"
                                                             aria-controls="DataTables_Table_0"
                                                             class="form-control form-control-sm"
-                                                            v-model="selected"
-                                                            @mouseleave="changeSelected">
+                                                            v-model="selected">
                                                         <option value="">请选择</option>
                                                         <option v-for="item in categories" :value="item.id">
                                                             {{item.name}}
@@ -148,8 +146,7 @@
                                                     <label>查找:<input
                                                             type="search" class="form-control form-control-sm"
                                                             aria-controls="DataTables_Table_0"
-                                                            v-model="search"
-                                                            @input="searchNews">
+                                                            v-model="search">
                                                     </label>
                                                 </div>
                                             </div>
@@ -205,8 +202,9 @@
                                                         <td>{{item.author}}</td>
                                                         <td>{{item.views}}</td>
                                                         <td>
-                                                            <button class="btn btn-sm btn-primary">查看评论
-                                                            </button>
+                                                            <a class="btn btn-sm btn-primary"
+                                                                    :href="'/admin/comment?nid='+item.id">查看评论
+                                                            </a>
                                                             <a :href="'/admin/news/updateNews/'+item.id"
                                                                class="btn btn-sm btn-warning">修改
                                                             </a>
@@ -329,7 +327,6 @@
                     })
             },
             deleteNews(id) {
-                console.log(id)
                 bootbox.confirm({
                     size: "small",
                     message: "确定删除吗？",
@@ -360,42 +357,32 @@
             },
             previous(pageNum) {
                 pageNum = (pageNum >= 0) ? pageNum : 0;
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getNewsList()
             },
             skip(pageNum) {
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getNewsList()
             },
             next(pageNum) {
                 pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getNewsList()
-            },
-            changePageSize() {
-                console.log(this.pageSize)
-                this.getNewsList()
-            },
-            changeSelected() {
-                console.log(this.selected)
-                this.getNewsList()
-            },
-            searchNews() {
-                console.log(this.username)
-                this.getNewsList()
-            },
+            }
         },
         mounted() {
             this.getCategoryList()
             this.getNewsList()
         },
         watch: {
-            pageNum: function (newVal) {
-                this.pageNum = newVal
-                console.log(this.pageNum)
+            pageSize: function () {
+                this.getNewsList()
+            },
+            selected: function () {
+                this.getNewsList()
+            },
+            search: function () {
+                this.getNewsList()
             }
         }
     })

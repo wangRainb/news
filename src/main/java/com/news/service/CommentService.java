@@ -46,4 +46,11 @@ public interface CommentService {
      * @return
      */
     long getCommentCount();
+
+    /**
+     * 删除评论
+     *
+     * @param id
+     */
+    void deleteComment(Integer id);
 }

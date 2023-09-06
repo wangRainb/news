@@ -24,22 +24,21 @@ public class CommentController {
     @GetMapping("/comment/getComments")
     @ResponseBody
     public JsonResult getCommentList(@RequestParam("nid") Integer nid,
-                                     @RequestParam("pageNum") Integer pageNum,
-                                     @RequestParam("pageSize") Integer pageSize) {
+                                     @RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
+                                     @RequestParam(name = "pageSize",defaultValue = "10") Integer pageSize) {
         if (nid == null) {
             return JsonResult.error("nid不能为空");
         } else {
-            if (pageNum == null) {
-                pageNum = 0;
-            }
-            if (pageSize == null) {
-                pageSize = 10;
-            }
             Page<Comment> page = commentService.getCommentList(pageNum, pageSize, Integer.valueOf(nid));
             Map<String, Object> map = new HashMap<>(16);
             map.put("msg", page);
             return JsonResult.ok(map);
         }
+    }
+
+    @GetMapping("/admin/comment")
+    public String commentView() {
+        return "admin/comment";
     }
 
     @PostMapping("/comment/addComment")
@@ -73,6 +72,18 @@ public class CommentController {
             } else {
                 return JsonResult.error();
             }
+        }
+    }
+
+    @PostMapping("/admin/comments/deleteComment/{id}")
+    @ResponseBody
+    public JsonResult deleteComment(@PathVariable Integer id) {
+        if (id == null) {
+            return JsonResult.error("id不能为空！");
+        }
+        else {
+            commentService.deleteComment(id);
+            return JsonResult.ok("删除成功！");
         }
     }
 }

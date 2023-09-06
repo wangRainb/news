@@ -94,4 +94,14 @@ public interface NewsService {
      * @return
      */
     long getViewCount();
+
+    /**
+     * 获取新闻列表
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param search
+     * @return Page<News>
+     */
+    Page<News> getNewsLikeTitle(Integer pageNum, Integer pageSize, String search);
 }

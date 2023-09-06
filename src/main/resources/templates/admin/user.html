@@ -120,8 +120,7 @@
                                                     <select name="DataTables_Table_0_length"
                                                             aria-controls="DataTables_Table_0"
                                                             class="form-control form-control-sm"
-                                                            v-model="pageSize"
-                                                            @mouseleave="changePageSize">
+                                                            v-model="pageSize">
                                                         <option value="10">10</option>
                                                         <option value="25">25</option>
                                                         <option value="50">50</option>
@@ -132,10 +131,8 @@
                                             <div class="col-sm-12 col-md-6">
                                                 <div id="DataTables_Table_0_filter" class="dataTables_filter">
                                                     <label>查找:
-                                                        <input
-                                                                type="search" class="form-control form-control-sm"
-                                                                aria-controls="DataTables_Table_0" v-model="username"
-                                                                @input="changeUsername">
+                                                        <input type="search" class="form-control form-control-sm"
+                                                               aria-controls="DataTables_Table_0" v-model="username">
                                                     </label>
                                                 </div>
                                             </div>
@@ -345,31 +342,19 @@
             },
             previous(pageNum) {
                 pageNum = (pageNum >= 0) ? pageNum : 0;
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getUserList()
             },
             skip(pageNum) {
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getUserList()
             },
             next(pageNum) {
                 pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
-                console.log(pageNum)
                 this.pageNum = pageNum
                 this.getUserList()
             },
-            changePageSize() {
-                console.log(this.pageSize)
-                this.getUserList()
-            },
-            changeUsername() {
-                console.log(this.username)
-                this.getUserList()
-            },
             deleteUser(id) {
-                console.log(id)
                 bootbox.confirm({
                     size: "small",
                     message: "确定删除吗？",
@@ -399,7 +384,6 @@
                 })
             },
             lock() {
-                console.log(this.lockId)
                 axios.get('/admin/user/lock/' + this.lockId +
                     '/' + this.lockDays
                 )
@@ -417,9 +401,11 @@
             this.getUserList()
         },
         watch: {
-            pageNum: function (newVal) {
-                this.pageNum = newVal
-                console.log(this.pageNum)
+            pageSize: function () {
+                this.getUserList()
+            },
+            username: function () {
+                this.getUserList()
             }
         }
     })

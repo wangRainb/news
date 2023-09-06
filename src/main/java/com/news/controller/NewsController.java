@@ -48,16 +48,10 @@ public class NewsController {
 
     @GetMapping("/admin/news/getNews")
     @ResponseBody
-    public JsonResult getNewsList(@RequestParam("pageNum") Integer pageNum,
-                                  @RequestParam("pageSize") Integer pageSize,
+    public JsonResult getNewsList(@RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
+                                  @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                   @RequestParam("categoryId") String categoryId,
                                   @RequestParam("search") String search) {
-        if (pageNum == null) {
-            pageNum = 0;
-        }
-        if (pageSize == null) {
-            pageSize = 10;
-        }
         Page<News> page = newsService.getNewsList(pageNum, pageSize, categoryId, search);
         Map<String, Object> map = new HashMap<>(16);
         map.put("msg", page);
@@ -66,15 +60,9 @@ public class NewsController {
 
     @GetMapping("/news/getNews")
     @ResponseBody
-    public JsonResult getNewsList(@RequestParam("pageNum") Integer pageNum,
-                                  @RequestParam("pageSize") Integer pageSize,
+    public JsonResult getNewsList(@RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
+                                  @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                   @RequestParam("categoryId") String categoryId) {
-        if (pageNum == null) {
-            pageNum = 0;
-        }
-        if (pageSize == null) {
-            pageSize = 10;
-        }
         Page<News> page = newsService.getNewsList(pageNum, pageSize, categoryId);
         Map<String, Object> map = new HashMap<>(16);
         map.put("msg", page);
@@ -85,6 +73,15 @@ public class NewsController {
     public String addNewsView(Model model) {
         model.addAttribute("categories", categoryService.getCategoryList());
         return "admin/addNews";
+    }
+
+    @GetMapping("/search")
+    public String searchView(@RequestParam(name = "search") String search,
+                             @RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
+                             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                             Model model) {
+        model.addAttribute("news", newsService.getNewsLikeTitle(pageNum, pageSize, search));
+        return "search";
     }
 
     @PostMapping("/admin/news/addNews")

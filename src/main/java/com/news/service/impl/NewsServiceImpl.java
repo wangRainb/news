@@ -3,6 +3,7 @@ package com.news.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.mysql.cj.util.StringUtils;
 import com.news.dao.CategoryDao;
+import com.news.dao.CommentDao;
 import com.news.dao.NewsDao;
 import com.news.pojo.News;
 import com.news.service.NewsService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +34,8 @@ public class NewsServiceImpl implements NewsService {
     private NewsDao newsDao;
     @Resource
     private CategoryDao categoryDao;
+    @Resource
+    private CommentDao commentDao;
 
     @Override
     public Page<News> getNewsList(Integer pageNum, Integer pageSize, String categoryId, String search) {
@@ -80,8 +84,10 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteNews(Integer id) {
         newsDao.deleteById(id);
+        commentDao.deleteAllByNid(id);
     }
 
     @Override

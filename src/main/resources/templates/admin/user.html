@@ -170,11 +170,6 @@
                                                         <th scope="col" tabindex="0"
                                                             aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
                                                             aria-label="Roles: activate to sort column ascending"
-                                                            style="width: 159px;">身份
-                                                        </th>
-                                                        <th scope="col" tabindex="0"
-                                                            aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
-                                                            aria-label="Roles: activate to sort column ascending"
                                                             style="width: 159px;">是否封号
                                                         </th>
                                                         <th scope="col" tabindex="0"
@@ -198,12 +193,6 @@
                                                         <td>{{item.username}}</td>
                                                         <td>{{item.phone}}</td>
                                                         <td>{{item.email}}</td>
-                                                        <td>
-                                                            <span class="badge badge-pill badge-primary"
-                                                                  v-if="item.role">管理员</span>
-                                                            <span class="badge badge-pill badge-danger"
-                                                                  v-else>普通用户</span>
-                                                        </td>
                                                         <td>{{item.lock == false ? '否' : '是'}}</td>
                                                         <td>{{item.lockDate}}</td>
                                                         <td>{{item.lockDays}}</td>

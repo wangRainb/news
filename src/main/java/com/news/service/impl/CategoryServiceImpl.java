@@ -6,6 +6,7 @@ import com.news.pojo.Category;
 import com.news.pojo.News;
 import com.news.service.CategoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteCategory(Integer id) {
         List<News> news = newsDao.getAllByCid(id);
         if (!news.isEmpty()) {

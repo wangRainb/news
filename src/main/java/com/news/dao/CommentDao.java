@@ -26,4 +26,19 @@ public interface CommentDao extends JpaRepository<Comment, Integer>, JpaSpecific
      * @return boolean
      */
     boolean existsCommentByUidAndNid(Integer uid, Integer nid);
+
+    /**
+     * 根据用户id删除评论
+     *
+     * @param uid
+     */
+    void deleteAllByUid(Integer uid);
+
+    /**
+     * 根据新闻id删除评论
+     *
+     * @param nid
+     */
+    void deleteAllByNid(Integer nid);
+
 }

@@ -1,5 +1,6 @@
 package com.news.service.impl;
 
+import com.news.dao.CommentDao;
 import com.news.dao.UserDao;
 import com.news.pojo.User;
 import com.news.service.UserService;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.*;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
+    @Resource
+    private CommentDao commentDao;
 
     @Override
     public User checkUser(String username, String password) {
@@ -52,7 +56,9 @@ public class UserServiceImpl implements UserService {
             Path path = root.get("username");
             //criteriaBuilder.like模糊查询，第一个参数是上一行的返回值，第二个参数是like('%xxx%')中，xxx的值
             Predicate predicate = criteriaBuilder.like(path, "%" + username + "%");
-            return predicate;
+            Predicate predicate1 = criteriaBuilder.equal(root.get("role"), false);
+            Predicate predicate2 = criteriaBuilder.and(predicate, predicate1);
+            return predicate2;
         };
         //分页条件存在这个对象中
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "id"));
@@ -66,8 +72,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteUser(Integer id) {
         userDao.deleteById(id);
+        commentDao.deleteAllByUid(id);
     }
 
     @Override

@@ -23,8 +23,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public Page<Notice> getNoticeList(Integer pageNum, Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "id"));
-        Page<Notice> page = noticeDao.findAll(pageRequest);
-        return page;
+        return noticeDao.findAll(pageRequest);
     }
 
     @Override

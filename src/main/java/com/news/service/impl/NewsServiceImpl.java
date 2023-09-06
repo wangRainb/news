@@ -17,7 +17,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,10 +41,8 @@ public class NewsServiceImpl implements NewsService {
         //查询条件存在这个对象中
         //重新Specification的toPredicate方法
         Specification<News> specification = (root, criteriaQuery, criteriaBuilder) -> {
-            //我要模糊查询的字段是title
-            Path path = root.get("title");
             //criteriaBuilder.like模糊查询，第一个参数是上一行的返回值，第二个参数是like('%xxx%')中，xxx的值
-            Predicate predicate = criteriaBuilder.like(path, "%" + search + "%");
+            Predicate predicate = criteriaBuilder.like(root.get("title"), "%" + search + "%");
             Integer cid = null;
             if (!StringUtils.isNullOrEmpty(categoryId)) {
                 cid = Integer.valueOf(categoryId);
@@ -54,8 +51,7 @@ public class NewsServiceImpl implements NewsService {
                 return predicate;
             } else {
                 Predicate predicate1 = criteriaBuilder.equal(root.get("cid"), cid);
-                Predicate predicate2 = criteriaBuilder.and(predicate, predicate1);
-                return predicate2;
+                return criteriaBuilder.and(predicate, predicate1);
             }
         };
         //分页条件存在这个对象中
@@ -63,9 +59,7 @@ public class NewsServiceImpl implements NewsService {
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
         Page<News> page = newsDao.findAll(specification, pageRequest);
         //返回的数据都封装在了Page<News>对象中
-        page.getContent().forEach(news -> {
-            news.setCategory(categoryDao.findById(news.getCid()).get());
-        });
+        page.getContent().forEach(news -> news.setCategory(categoryDao.findById(news.getCid()).get()));
         return page;
     }
 
@@ -127,15 +121,13 @@ public class NewsServiceImpl implements NewsService {
             if (cid == null) {
                 throw new RuntimeException();
             } else {
-                Predicate predicate = criteriaBuilder.equal(root.get("cid"), cid);
-                return predicate;
+                return criteriaBuilder.equal(root.get("cid"), cid);
             }
         };
         //分页条件存在这个对象中
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "createTime"));
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
-        Page<News> page = newsDao.findAll(specification, pageRequest);
-        return page;
+        return newsDao.findAll(specification, pageRequest);
     }
 
     @Override
@@ -145,15 +137,13 @@ public class NewsServiceImpl implements NewsService {
         Specification<News> specification = (root, criteriaQuery, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.equal(root.get("cid"), cid);
             Predicate predicate1 = criteriaBuilder.notEqual(root.get("id"), id);
-            Predicate predicate2 = criteriaBuilder.and(predicate, predicate1);
-            return predicate2;
+            return criteriaBuilder.and(predicate, predicate1);
         };
         //分页条件存在这个对象中
         PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createTime"));
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象
         Page<News> page = newsDao.findAll(specification, pageRequest);
-        List<News> newsList = page.getContent();
-        return newsList;
+        return page.getContent();
     }
 
     @Override
@@ -182,10 +172,7 @@ public class NewsServiceImpl implements NewsService {
     public Page<News> getNewsLikeTitle(Integer pageNum, Integer pageSize, String search) {
         //查询条件存在这个对象中
         //重新Specification的toPredicate方法
-        Specification<News> specification = (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.like(root.get("title"), "%" + search + "%");
-            return predicate;
-        };
+        Specification<News> specification = (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + search + "%");
         //分页条件存在这个对象中
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "createTime"));
         //进行查询操作，第一个参数是查询条件对象，第二个参数是分页对象

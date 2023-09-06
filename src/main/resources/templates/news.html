@@ -59,7 +59,8 @@
                                 </svg>
                             </div>
                         </div>
-                        <input type="text" class="form-control" id="search" placeholder="新闻标题">
+                        <label for="search"></label><input type="text" class="form-control" id="search"
+                                                           placeholder="新闻标题">
                         <button type="button" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
                     </div>
                 </form>
@@ -100,7 +101,7 @@
                                     <hr/>
                                     <img th:unless="${news.img eq '' || news.img eq null}"
                                          th:src="@{'/img/' + ${news.img}}"
-                                         class="card-img-top">
+                                         class="card-img-top" alt="">
                                     <div class="card-text" th:utext="${news.content}"></div>
                                     <div class="author" th:text="'[责任编辑：'+${news.author}+']'"></div>
                                 </div>
@@ -128,7 +129,9 @@
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="col-md-12">
-                                            <textarea v-model="comment.content" class="form-control" rows="6"
+                                            <label for="content"></label>
+                                            <textarea id="content" v-model="comment.content" class="form-control"
+                                                      rows="6"
                                                       placeholder="我有话要说。。。"></textarea>
                                             <div class="row" style="margin-top: 10px;">
                                                 <div class="col-sm-11" style="text-align: right">
@@ -152,7 +155,7 @@
                                             <div class="media" v-for="item in comments">
                                                 <img width="64px" height="64px"
                                                      :src="item.user.avatar != null ? '/img/'+item.user.avatar : '/img/logo.png'"
-                                                     class="mr-3">
+                                                     class="mr-3" alt="">
                                                 <div class="media-body">
                                                     <h5 class="mt-0 text-primary" :ref="item.user">
                                                         {{item.user.username}}</h5>
@@ -184,12 +187,12 @@
                                                            @click="previous(pageNum-1)">上一页</a>
                                                     </li>
                                                     <li class="paginate_button page-item"
-                                                        v-for="(item, index) in totalPages"
-                                                        :class="{'active':index===pageNum}">
+                                                        v-for="index in totalPages"
+                                                        :class="{'active':(index-1)===pageNum}">
                                                         <a aria-controls="DataTables_Table_0"
                                                            tabindex="0"
                                                            class="page-link"
-                                                           @click="skip(index)">{{index + 1}}</a>
+                                                           @click="skip(index-1)">{{index}}</a>
                                                     </li>
                                                     <li class="paginate_button page-item next"
                                                         id="DataTables_Table_0_next">
@@ -271,9 +274,9 @@
                         console.log(error);
                     })
             },
-            addComment() {
+            addComment: function () {
                 this.comment.uid = document.getElementById('uid').value
-                if (this.comment.content == '') {
+                if (!(this.comment.content !== '')) {
                     toastr.warning('评论不能为空！')
                 } else {
                     console.log(this.comment)
@@ -303,10 +306,6 @@
                 pageNum = (pageNum <= this.totalPages - 1) ? pageNum : this.totalPages - 1;
                 console.log(pageNum)
                 this.pageNum = pageNum
-                this.getCommentList()
-            },
-            changePageSize() {
-                console.log(this.pageSize)
                 this.getCommentList()
             }
         },

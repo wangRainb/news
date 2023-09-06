@@ -38,8 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkUserIsExist(String username) {
-        boolean userIsExist = userDao.existsUserByUsername(username);
-        return userIsExist;
+        return userDao.existsUserByUsername(username);
     }
 
     @Override
@@ -52,13 +51,10 @@ public class UserServiceImpl implements UserService {
         //查询条件存在这个对象中
         //重新Specification的toPredicate方法
         Specification<User> specification = (root, criteriaQuery, criteriaBuilder) -> {
-            //我要模糊查询的字段是username
-            Path path = root.get("username");
             //criteriaBuilder.like模糊查询，第一个参数是上一行的返回值，第二个参数是like('%xxx%')中，xxx的值
-            Predicate predicate = criteriaBuilder.like(path, "%" + username + "%");
+            Predicate predicate = criteriaBuilder.like(root.get("username"), "%" + username + "%");
             Predicate predicate1 = criteriaBuilder.equal(root.get("role"), false);
-            Predicate predicate2 = criteriaBuilder.and(predicate, predicate1);
-            return predicate2;
+            return criteriaBuilder.and(predicate, predicate1);
         };
         //分页条件存在这个对象中
         PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.ASC, "id"));

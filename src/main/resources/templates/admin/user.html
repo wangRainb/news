@@ -190,7 +190,7 @@
                                                         <td>{{item.username}}</td>
                                                         <td>{{item.phone}}</td>
                                                         <td>{{item.email}}</td>
-                                                        <td>{{item.lock == false ? '否' : '是'}}</td>
+                                                        <td>{{item.lock === false ? '否' : '是'}}</td>
                                                         <td>{{item.lockDate}}</td>
                                                         <td>{{item.lockDays}}</td>
                                                         <td>
@@ -225,7 +225,8 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <input class="form-control"
+                                                        <label for="days"></label>
+                                                        <input id="days" class="form-control"
                                                                placeholder="封号天数" type="number"
                                                                v-model="lockDays">
                                                     </div>
@@ -261,12 +262,12 @@
                                                                @click="previous(pageNum-1)">上一页</a>
                                                         </li>
                                                         <li class="paginate_button page-item"
-                                                            v-for="(item, index) in totalPages"
-                                                            :class="{'active':index===pageNum}">
+                                                            v-for="index in totalPages"
+                                                            :class="{'active':(index-1)===pageNum}">
                                                             <a aria-controls="DataTables_Table_0"
                                                                tabindex="0"
                                                                class="page-link"
-                                                               @click="skip(index)">{{index + 1}}</a>
+                                                               @click="skip(index-1)">{{index}}</a>
                                                         </li>
                                                         <li class="paginate_button page-item next"
                                                             id="DataTables_Table_0_next">

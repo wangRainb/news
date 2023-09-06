@@ -44,6 +44,7 @@
                                 </svg>
                             </div>
                         </div>
+                        <label for="search"></label>
                         <input name="search" type="text" class="form-control" id="search" placeholder="新闻标题">
                         <button type="submit" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
                     </div>
@@ -74,13 +75,25 @@
             <div class="adminx-main-content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-8">
                             <div th:if="${news.isEmpty()}">
                                 <div class="alert alert-primary" style="width: 100%" role="alert">
                                     暂无数据
                                 </div>
                             </div>
                             <div th:unless="${news.isEmpty()}">
+                                <ul class="list-group">
+                                    <li class="list-group-item">新闻列表</li>
+                                    <li class="list-group-item" th:each="item : ${news.content}">
+                                        <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+                                        <!--/*@thymesVar id="id" type="java.lang.Integer"*/-->
+                                        <a class="nav-link"
+                                           th:text="${item.title}"
+                                           th:href="@{${'/news/'+item.id}}"></a>
+                                        <!--/*@thymesVar id="category" type="com.news.pojo.Category"*/-->
+                                        <span style="float: right" th:text="${item.category.name}"></span>
+                                    </li>
+                                </ul>
 
                             </div>
                         </div>

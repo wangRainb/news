@@ -1,9 +1,4 @@
 package com.news.utils;
-/**
- * 封装一个自定义，返回消息+集合+状态码的容器
- * <p>
- * 项目返回到前端的信息必须是由这三样信息组合的
- */
 
 import java.util.HashMap;
 import java.util.Map;

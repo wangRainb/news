@@ -46,6 +46,7 @@
                                 </svg>
                             </div>
                         </div>
+                        <label for="search"></label>
                         <input name="search" type="text" class="form-control" id="search" placeholder="新闻标题">
                         <button type="submit" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
                     </div>
@@ -123,12 +124,12 @@
                                                                @click="previous(pageNum-1)">上一页</a>
                                                         </li>
                                                         <li class="paginate_button page-item"
-                                                            v-for="(item, index) in totalPages"
-                                                            :class="{'active':index===pageNum}">
+                                                            v-for="index in totalPages"
+                                                            :class="{'active':(index-1)===pageNum}">
                                                             <a aria-controls="DataTables_Table_0"
                                                                tabindex="0"
                                                                class="page-link"
-                                                               @click="skip(index)">{{index + 1}}</a>
+                                                               @click="skip(index-1)">{{index}}</a>
                                                         </li>
                                                         <li class="paginate_button page-item next"
                                                             id="DataTables_Table_0_next">

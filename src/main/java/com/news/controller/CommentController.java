@@ -29,7 +29,7 @@ public class CommentController {
         if (nid == null) {
             return JsonResult.error("nid不能为空");
         } else {
-            Page<Comment> page = commentService.getCommentList(pageNum, pageSize, Integer.valueOf(nid));
+            Page<Comment> page = commentService.getCommentList(pageNum, pageSize, nid);
             Map<String, Object> map = new HashMap<>(16);
             map.put("msg", page);
             return JsonResult.ok(map);

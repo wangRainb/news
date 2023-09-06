@@ -37,7 +37,7 @@ public class NoticeController {
             pageSize = 10;
         }
         Page<Notice> page = noticeService.getNoticeList(pageNum, pageSize);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(16);
         map.put("msg", page);
         return JsonResult.ok(map);
     }

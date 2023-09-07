@@ -70,14 +70,22 @@ public class UserController {
 
     @GetMapping("/profile/{id}")
     public String profileView(@PathVariable Integer id, Model model) {
-        model.addAttribute("profile", userService.getUser(id));
-        return "profile";
+        if (id == null) {
+            throw new RuntimeException("id不能为空！");
+        } else {
+            model.addAttribute("profile", userService.getUser(id));
+            return "profile";
+        }
     }
 
     @GetMapping("/updateProfile/{id}")
     public String updateProfileView(@PathVariable Integer id, Model model) {
-        model.addAttribute("profile", userService.getUser(id));
-        return "updateProfile";
+        if (id == null) {
+            throw new RuntimeException("id不能为空！");
+        } else {
+            model.addAttribute("profile", userService.getUser(id));
+            return "updateProfile";
+        }
     }
 
     @PostMapping("/updateProfile")
@@ -101,6 +109,30 @@ public class UserController {
             user = userService.updateUser(user, file);
             request.getSession().setAttribute("user", user);
             return "redirect:/profile/" + user.getId();
+        }
+    }
+
+    @GetMapping("/updatePassword/{id}")
+    public String updatePassword(@PathVariable Integer id, Model model) {
+        if (id == null) {
+            throw new RuntimeException("id不能为空！");
+        } else {
+            model.addAttribute("profile", userService.getUser(id));
+            return "updatePassword";
+        }
+    }
+
+    @PostMapping("/updatePassword")
+    @ResponseBody
+    public JsonResult updatePassword(String id, String password) {
+        if (StringUtils.isNullOrEmpty(id)) {
+            return JsonResult.error("id不能为空！");
+        }
+        if (StringUtils.isNullOrEmpty(password)) {
+            return JsonResult.error("密码不能为空！");
+        } else {
+            userService.updatePasswordById(Integer.valueOf(id), password);
+            return JsonResult.ok("修改密码成功！");
         }
     }
 }

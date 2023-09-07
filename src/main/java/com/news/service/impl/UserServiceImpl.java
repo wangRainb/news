@@ -6,6 +6,7 @@ import com.news.dao.CommentDao;
 import com.news.dao.UserDao;
 import com.news.pojo.User;
 import com.news.service.UserService;
+import com.news.utils.DigestUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -141,5 +142,12 @@ public class UserServiceImpl implements UserService {
         userDao.save(user);
         user.setPassword(null);
         return user;
+    }
+
+    @Override
+    public void updatePasswordById(Integer id, String password) {
+        User user = userDao.findById(id).get();
+        user.setPassword(DigestUtil.md5Hex(password));
+        userDao.save(user);
     }
 }

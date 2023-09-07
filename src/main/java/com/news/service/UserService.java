@@ -88,4 +88,12 @@ public interface UserService {
      * @throws IOException
      */
     User updateUser(User user, MultipartFile file) throws IOException;
+
+    /**
+     * 修改密码
+     *
+     * @param id
+     * @param password
+     */
+    void updatePasswordById(Integer id, String password);
 }

@@ -12,126 +12,115 @@
     <script th:src="@{/dist/js/adminx.js}"></script>
 </head>
 <body>
-<div id="app">
-    <div class="adminx-container">
-        <nav class="navbar navbar-expand-lg justify-content-between fixed-top navbar-light bg-light">
-            <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/index">
-                <img th:src="@{/img/logo.png}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
-                X新闻网
-            </a>
+<div class="adminx-container">
+    <nav class="navbar navbar-expand-lg justify-content-between fixed-top navbar-light bg-light">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/index">
+            <img th:src="@{/img/logo.png}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            X新闻网
+        </a>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/index">首页</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">公告</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/index">后台管理</a>
-                    </li>
-                </ul>
-                <form class="form-inline form-quicksearch d-none d-md-block mx-auto" method="get" action="/search">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round" class="feather feather-search">
-                                    <circle cx="10.5" cy="10.5" r="7.5"></circle>
-                                    <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-                                </svg>
-                            </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">公告</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/index">后台管理</a>
+                </li>
+            </ul>
+            <form class="form-inline form-quicksearch d-none d-md-block mx-auto" method="get" action="/search">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-search">
+                                <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                                <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
+                            </svg>
                         </div>
-                        <label for="search"></label>
-                        <input name="search" type="text" class="form-control" id="search" placeholder="新闻标题">
-                        <button type="submit" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
                     </div>
-                </form>
-                <ul class="navbar-nav d-flex justify-content-end mr-2">
-                    <!-- Notifications -->
-                    <li class="nav-item dropdown">
-                        <a th:if="${session.user}" class="nav-link avatar-with-name" id="navbarDropdownMenuLink"
-                           data-toggle="dropdown" href="#">
-                            <img th:src="@{${session.user.avatar != null ? '/img/' + session.user.avatar : '/img/logo.png'}}"
-                                 class="d-inline-block align-top" alt="">
-                        </a>
-                        <a th:unless="${session.user}" class="nav-link" href="/login">登录/注册</a>
-                        <div th:if="${session.user}" class="dropdown-menu dropdown-menu-right"
-                             aria-labelledby="navbarDropdownMenuLink">
-                            <span class="dropdown-item disabled" th:text="${session.user.username}"></span>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-primary" href="#">个人中心</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-primary" href="/logout">退出登录</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                    <label for="query"></label>
+                    <input name="query" type="text" class="form-control" id="query" placeholder="新闻标题">
+                    <button type="submit" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
+                </div>
+            </form>
+            <ul class="navbar-nav d-flex justify-content-end mr-2">
+                <!-- Notifications -->
+                <li class="nav-item dropdown">
+                    <a th:if="${session.user}" class="nav-link avatar-with-name" id="navbarDropdownMenuLink"
+                       data-toggle="dropdown" href="#">
+                        <img th:src="@{${session.user.avatar != null ? '/img/' + session.user.avatar : '/img/logo.png'}}"
+                             class="d-inline-block align-top" alt="">
+                    </a>
+                    <a th:unless="${session.user}" class="nav-link" href="/login">登录/注册</a>
+                    <div th:if="${session.user}" class="dropdown-menu dropdown-menu-right"
+                         aria-labelledby="navbarDropdownMenuLink">
+                        <span class="dropdown-item disabled" th:text="${session.user.username}"></span>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-primary" href="#">个人中心</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-primary" href="/logout">退出登录</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-        <div class="adminx-content">
-            <div class="adminx-main-content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <div th:if="${news.isEmpty()}">
-                                <div class="alert alert-primary" style="width: 100%" role="alert">
-                                    暂无数据
-                                </div>
+    <div class="adminx-content">
+        <div class="adminx-main-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div th:if="${news.isEmpty()}">
+                            <div class="alert alert-primary" style="width: 100%" role="alert">
+                                暂无数据
                             </div>
-                            <div th:unless="${news.isEmpty()}">
-                                <ul class="list-group">
-                                    <li class="list-group-item">新闻列表</li>
-                                    <li class="list-group-item" th:each="item : ${news.content}">
-                                        <!--/*@thymesVar id="title" type="java.lang.String"*/-->
-                                        <!--/*@thymesVar id="id" type="java.lang.Integer"*/-->
-                                        <a class="nav-link"
-                                           th:text="${item.title}"
-                                           th:href="@{${'/news/'+item.id}}"></a>
-                                        <!--/*@thymesVar id="category" type="com.news.pojo.Category"*/-->
-                                        <span style="float: right" th:text="${item.category.name}"></span>
-                                    </li>
-                                </ul>
+                        </div>
+                        <div th:unless="${news.isEmpty()}">
+                            <ul class="list-group">
+                                <li class="list-group-item">新闻列表</li>
+                                <li class="list-group-item" th:each="item : ${news.content}">
+                                    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+                                    <!--/*@thymesVar id="id" type="java.lang.Integer"*/-->
+                                    <a class="nav-link"
+                                       th:text="${item.title}"
+                                       th:href="@{${'/news/'+item.id}}"></a>
+                                    <!--/*@thymesVar id="category" type="com.news.pojo.Category"*/-->
+                                    <span style="float: right" th:text="${item.category.name}"></span>
+                                </li>
+                            </ul>
 
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="paging_simple_numbers"
-                                             id="DataTables_Table_0_paginate">
-                                            <ul class="pagination">
-                                                <li class="paginate_button page-item previous"
-                                                    id="DataTables_Table_0_previous">
-                                                    <a aria-controls="DataTables_Table_0"
-                                                       tabindex="0"
-                                                       class="page-link"
-                                                       th:href="@{${news.pageable.pageNumber==0 ?
-                                                       '#' : '/search?search='+search+
-                                                       '?pageNum='+((news.pageable.pageNumber)-1)+
-                                                       '?pageSize='+news.pageable.pageSize}}"
-                                                    >上一页</a>
-                                                </li>
-                                                <li class="paginate_button page-item">
-                                                    <a aria-controls="DataTables_Table_0"
-                                                       tabindex="0"
-                                                       class="page-link"
-                                                       th:each="item : ${news.totalPages}"
-                                                    ></a>
-                                                </li>
-                                                <li class="paginate_button page-item next"
-                                                    id="DataTables_Table_0_next">
-                                                    <a aria-controls="DataTables_Table_0"
-                                                       tabindex="0"
-                                                       class="page-link"
-                                                       th:href="@{${news.pageable.pageNumber==((news.totalPages)-1) ?
-                                                       '#' : '/search?search='+search+
-                                                       '?pageNum='+((news.pageable.pageNumber)-1)+
-                                                       '?pageSize='+news.pageable.pageSize}}"
-                                                    >下一页</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                            <div class="row" th:if="${news.totalElements>10}">
+                                <div class="col-sm-12">
+                                    <nav style="margin-top: 30px;float: right" aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   th:href="@{${news.pageable.pageNumber==0 ? '#' :
+                                                '/search?query='+query+
+                                                '&pageNum='+((news.pageable.pageNumber)-1)+
+                                                '&pageSize='+news.pageable.pageSize}}">上一页</a>
+                                            </li>
+                                            <li th:each="item : ${#numbers.sequence(1, news.totalPages)}"
+                                                th:class="${(item)-1==news.pageable.pageNumber ? 'page-item active':'page-item'}">
+                                                <a class="page-link" th:text="${item}"
+                                                   th:href="@{${'/search?query='+query+
+                                                   '&pageNum='+((item)-1)+
+                                                   '&pageSize='+news.pageable.pageSize}}"></a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   th:href="@{${news.pageable.pageNumber==((news.totalPages)-1) ? '#' :
+                                                '/search?query='+query+
+                                                '&pageNum='+((news.pageable.pageNumber)+1)+
+                                                '&pageSize='+news.pageable.pageSize}}">下一页</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                         </div>

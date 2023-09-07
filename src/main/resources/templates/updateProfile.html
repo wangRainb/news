@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>X新闻网 - 搜索</title>
+    <title>X新闻网 - 修改资料</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -74,54 +74,51 @@
         <div class="adminx-main-content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-8">
-                        <div th:if="${news.isEmpty()}">
-                            <div class="alert alert-primary" style="width: 100%" role="alert">
-                                暂无数据
-                            </div>
+                    <div class="col-md-2">
+                        <div class="list-group">
+                            <a th:href="@{${'/profile/'+profile.id}}"
+                               class="list-group-item list-group-item-action">个人资料</a>
+                            <a th:href="@{${'/updateProfile/'+profile.id}}"
+                               class="list-group-item list-group-item-action active">修改资料</a>
+                            <a th:href="@{${'/updatePassword/'+profile.id}}"
+                               class="list-group-item list-group-item-action">修改密码</a>
                         </div>
-                        <div th:unless="${news.isEmpty()}">
-                            <ul class="list-group">
-                                <li class="list-group-item">新闻列表</li>
-                                <li class="list-group-item" th:each="item : ${news.content}">
-                                    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
-                                    <!--/*@thymesVar id="id" type="java.lang.Integer"*/-->
-                                    <a class="nav-link"
-                                       th:text="${item.title}"
-                                       th:href="@{${'/news/'+item.id}}"></a>
-                                    <!--/*@thymesVar id="category" type="com.news.pojo.Category"*/-->
-                                    <span style="float: right" th:text="${item.category.name}"></span>
-                                </li>
-                            </ul>
+                    </div>
 
-                            <div class="row" th:if="${news.totalElements>10}">
-                                <div class="col-sm-12">
-                                    <nav style="margin-top: 30px;float: right" aria-label="Page navigation example">
-                                        <ul class="pagination">
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                   th:href="@{${news.pageable.pageNumber==0 ? '#' :
-                                                '/search?query='+query+
-                                                '&pageNum='+((news.pageable.pageNumber)-1)+
-                                                '&pageSize='+news.pageable.pageSize}}">上一页</a>
-                                            </li>
-                                            <li th:each="item : ${#numbers.sequence(1, news.totalPages)}"
-                                                th:class="${(item)-1==news.pageable.pageNumber ? 'page-item active':'page-item'}">
-                                                <a class="page-link" th:text="${item}"
-                                                   th:href="@{${'/search?query='+query+
-                                                   '&pageNum='+((item)-1)+
-                                                   '&pageSize='+news.pageable.pageSize}}"></a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                   th:href="@{${news.pageable.pageNumber==((news.totalPages)-1) ? '#' :
-                                                '/search?query='+query+
-                                                '&pageNum='+((news.pageable.pageNumber)+1)+
-                                                '&pageSize='+news.pageable.pageSize}}">下一页</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
+                    <div class="col-md-6">
+                        <div class="card mb-grid">
+                            <div class="card-header">
+                                <div class="card-header-title">个人资料</div>
+                            </div>
+                            <div class="card-body">
+                                <form action="/updateProfile" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" th:value="${profile.id}">
+                                    <div class="form-group">
+                                        <label for="username">用户名</label>
+                                        <input id="username" name="username" th:value="${profile.username}"
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">电话</label>
+                                        <input id="phone" name="phone" th:value="${profile.phone}"
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">电子邮箱</label>
+                                        <input id="email" name="email" th:value="${profile.email}" type="email"
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="img" class="form-label">头像</label>
+                                        <div class="custom-file">
+                                            <input name="img" type="file" class="custom-file-input" id="img">
+                                            <label class="custom-file-label" for="img">选择文件</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">修改</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

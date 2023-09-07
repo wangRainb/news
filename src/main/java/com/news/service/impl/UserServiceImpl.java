@@ -1,5 +1,7 @@
 package com.news.service.impl;
 
+import cn.hutool.core.util.IdUtil;
+import com.mysql.cj.util.StringUtils;
 import com.news.dao.CommentDao;
 import com.news.dao.UserDao;
 import com.news.pojo.User;
@@ -10,9 +12,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -102,11 +109,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(Integer id) {
-        return userDao.findById(id).get();
+        User user = userDao.findById(id).get();
+        user.setPassword(null);
+        return user;
     }
 
     @Override
     public long getUserCount() {
         return userDao.count();
+    }
+
+    @Override
+    public User updateUser(User user, MultipartFile file) throws IOException {
+        Optional<User> optionalUser = userDao.findById(user.getId());
+        user.setRole(optionalUser.get().isRole());
+        user.setLocked(optionalUser.get().isLocked());
+        user.setPassword(optionalUser.get().getPassword());
+        if (!StringUtils.isNullOrEmpty(file.getOriginalFilename())) {
+            if (!file.getOriginalFilename().equals(optionalUser.get().getAvatar())) {
+                user.setAvatar(IdUtil.randomUUID() + ".png");
+                File path = new File("../news/src/main/resources/static");
+                String filePath = path.getCanonicalPath() + "\\img\\" + user.getAvatar();
+                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+                FileCopyUtils.copy(file.getBytes(), fileOutputStream);
+            } else {
+                user.setAvatar(optionalUser.get().getAvatar());
+            }
+        } else {
+            user.setAvatar(optionalUser.get().getAvatar());
+        }
+        userDao.save(user);
+        user.setPassword(null);
+        return user;
     }
 }

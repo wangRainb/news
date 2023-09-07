@@ -1,14 +1,17 @@
 package com.news.controller;
 
+import com.mysql.cj.util.StringUtils;
 import com.news.pojo.User;
 import com.news.service.UserService;
 import com.news.utils.JsonResult;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,11 +60,47 @@ public class UserController {
     @ResponseBody
     public JsonResult lock(@PathVariable Integer id,
                            @PathVariable Integer lockDays) {
-        if (!StringUtils.isEmpty(id) && !StringUtils.isEmpty(lockDays)) {
+        if (id != null && lockDays != null) {
             userService.lock(id, lockDays);
             return JsonResult.ok("封号成功");
         } else {
             return JsonResult.error("id和封号天数不能为空");
+        }
+    }
+
+    @GetMapping("/profile/{id}")
+    public String profileView(@PathVariable Integer id, Model model) {
+        model.addAttribute("profile", userService.getUser(id));
+        return "profile";
+    }
+
+    @GetMapping("/updateProfile/{id}")
+    public String updateProfileView(@PathVariable Integer id, Model model) {
+        model.addAttribute("profile", userService.getUser(id));
+        return "updateProfile";
+    }
+
+    @PostMapping("/updateProfile")
+    public String updateProfile(String id,
+                                String username,
+                                String phone,
+                                String email,
+                                @RequestPart(value = "img", required = false) MultipartFile file,
+                                HttpServletRequest request) throws Exception {
+        if (StringUtils.isNullOrEmpty(id)
+                || StringUtils.isNullOrEmpty(username)
+                || StringUtils.isNullOrEmpty(phone)
+                || StringUtils.isNullOrEmpty(email)) {
+            throw new RuntimeException();
+        } else {
+            User user = new User();
+            user.setId(Integer.valueOf(id));
+            user.setUsername(username);
+            user.setPhone(phone);
+            user.setEmail(email);
+            user = userService.updateUser(user, file);
+            request.getSession().setAttribute("user", user);
+            return "redirect:/profile/" + user.getId();
         }
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>X新闻网 - 搜索</title>
+    <title>X新闻网 - 个人中心</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -74,54 +74,28 @@
         <div class="adminx-main-content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-8">
-                        <div th:if="${news.isEmpty()}">
-                            <div class="alert alert-primary" style="width: 100%" role="alert">
-                                暂无数据
-                            </div>
+                    <div class="col-md-2">
+                        <div class="list-group">
+                            <a th:href="@{${'/profile/'+profile.id}}"
+                               class="list-group-item list-group-item-action active">个人资料</a>
+                            <a th:href="@{${'/updateProfile/'+profile.id}}"
+                               class="list-group-item list-group-item-action">修改资料</a>
+                            <a th:href="@{${'/updatePassword/'+profile.id}}"
+                               class="list-group-item list-group-item-action">修改密码</a>
                         </div>
-                        <div th:unless="${news.isEmpty()}">
-                            <ul class="list-group">
-                                <li class="list-group-item">新闻列表</li>
-                                <li class="list-group-item" th:each="item : ${news.content}">
-                                    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
-                                    <!--/*@thymesVar id="id" type="java.lang.Integer"*/-->
-                                    <a class="nav-link"
-                                       th:text="${item.title}"
-                                       th:href="@{${'/news/'+item.id}}"></a>
-                                    <!--/*@thymesVar id="category" type="com.news.pojo.Category"*/-->
-                                    <span style="float: right" th:text="${item.category.name}"></span>
-                                </li>
-                            </ul>
+                    </div>
 
-                            <div class="row" th:if="${news.totalElements>10}">
-                                <div class="col-sm-12">
-                                    <nav style="margin-top: 30px;float: right" aria-label="Page navigation example">
-                                        <ul class="pagination">
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                   th:href="@{${news.pageable.pageNumber==0 ? '#' :
-                                                '/search?query='+query+
-                                                '&pageNum='+((news.pageable.pageNumber)-1)+
-                                                '&pageSize='+news.pageable.pageSize}}">上一页</a>
-                                            </li>
-                                            <li th:each="item : ${#numbers.sequence(1, news.totalPages)}"
-                                                th:class="${(item)-1==news.pageable.pageNumber ? 'page-item active':'page-item'}">
-                                                <a class="page-link" th:text="${item}"
-                                                   th:href="@{${'/search?query='+query+
-                                                   '&pageNum='+((item)-1)+
-                                                   '&pageSize='+news.pageable.pageSize}}"></a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link"
-                                                   th:href="@{${news.pageable.pageNumber==((news.totalPages)-1) ? '#' :
-                                                '/search?query='+query+
-                                                '&pageNum='+((news.pageable.pageNumber)+1)+
-                                                '&pageSize='+news.pageable.pageSize}}">下一页</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="text-center" style="padding-top: 30px;">
+                                <img width="75px" height="75px"
+                                     th:src="@{${profile.avatar == null ? '/img/logo.png' : '/img/'+profile.avatar}}"
+                                     class="rounded-circle" alt="...">
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 class="card-title" style="font-weight: bold" th:text="${profile.username}"></h5>
+                                <p class="card-text" th:text="${'电话：' + profile.phone}"></p>
+                                <p class="card-text" th:text="${'邮箱：' + profile.email}"></p>
                             </div>
                         </div>
                     </div>

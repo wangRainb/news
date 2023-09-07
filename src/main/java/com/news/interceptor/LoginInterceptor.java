@@ -16,7 +16,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (user == null) {
             response.sendRedirect("/login");
             return false;
-        } else if (!user.isRole()) {
+        } else if (!user.isRole() && request.getRequestURI().contains("/admin")) {
             response.sendRedirect("/403");
             return false;
         } else {

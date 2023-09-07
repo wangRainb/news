@@ -28,7 +28,7 @@
                         <a class="nav-link" href="/index">首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">公告</a>
+                        <a class="nav-link" href="/notice">公告</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/index">后台管理</a>
@@ -64,7 +64,7 @@
                              aria-labelledby="navbarDropdownMenuLink">
                             <span class="dropdown-item disabled" th:text="${session.user.username}"></span>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-primary" href="#">个人中心</a>
+                            <a class="dropdown-item text-primary" th:href="@{${'/profile/'+session.user.id}}">个人中心</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-primary" href="/logout">退出登录</a>
                         </div>

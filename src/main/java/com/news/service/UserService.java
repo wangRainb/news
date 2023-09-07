@@ -2,6 +2,9 @@ package com.news.service;
 
 import com.news.pojo.User;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @author 18786
@@ -75,4 +78,14 @@ public interface UserService {
      * @return
      */
     long getUserCount();
+
+    /**
+     * 修改用户
+     *
+     * @param user
+     * @param file
+     * @return User
+     * @throws IOException
+     */
+    User updateUser(User user, MultipartFile file) throws IOException;
 }

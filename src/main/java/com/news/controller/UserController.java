@@ -30,15 +30,9 @@ public class UserController {
 
     @GetMapping("/admin/user/getUsers")
     @ResponseBody
-    public JsonResult getUserList(@RequestParam("pageNum") Integer pageNum,
-                                  @RequestParam("pageSize") Integer pageSize,
+    public JsonResult getUserList(@RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
+                                  @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                   @RequestParam("username") String username) {
-        if (pageNum == null) {
-            pageNum = 0;
-        }
-        if (pageSize == null) {
-            pageSize = 10;
-        }
         Page<User> page = userService.getUserList(pageNum, pageSize, username);
         Map<String, Object> map = new HashMap<>(16);
         map.put("msg", page);

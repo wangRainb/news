@@ -6,6 +6,7 @@ import com.news.service.NoticeService;
 import com.news.utils.JsonResult;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,14 +29,8 @@ public class NoticeController {
 
     @GetMapping("/admin/notice/getNotices")
     @ResponseBody
-    public JsonResult getNoticeList(@RequestParam("pageNum") Integer pageNum,
-                                    @RequestParam("pageSize") Integer pageSize) {
-        if (pageNum == null) {
-            pageNum = 0;
-        }
-        if (pageSize == null) {
-            pageSize = 10;
-        }
+    public JsonResult getNoticeList(@RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
+                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         Page<Notice> page = noticeService.getNoticeList(pageNum, pageSize);
         Map<String, Object> map = new HashMap<>(16);
         map.put("msg", page);
@@ -70,5 +65,13 @@ public class NoticeController {
             noticeService.deleteNotice(id);
             return JsonResult.ok("删除成功！");
         }
+    }
+
+    @GetMapping("/notice")
+    public String noticeView(@RequestParam(name = "pageNum", defaultValue = "0") Integer pageNum,
+                             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                             Model model) {
+        model.addAttribute("notices", noticeService.getNoticeList(pageNum, pageSize));
+        return "notice";
     }
 }

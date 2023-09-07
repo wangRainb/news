@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>X新闻网 - 公告</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" th:href="@{/dist/css/adminx.css}">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.4/toastr.css">
+    <script th:src="@{/dist/js/vendor.js}"></script>
+    <script th:src="@{/dist/js/adminx.js}"></script>
+</head>
+<body>
+<div class="adminx-container">
+    <nav class="navbar navbar-expand-lg justify-content-between fixed-top navbar-light bg-light">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/index">
+            <img th:src="@{/img/logo.png}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            X新闻网
+        </a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/notice">公告</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/index">后台管理</a>
+                </li>
+            </ul>
+            <form class="form-inline form-quicksearch d-none d-md-block mx-auto" method="get" action="/search">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-search">
+                                <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                                <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <label for="query"></label>
+                    <input name="query" type="text" class="form-control" id="query" placeholder="新闻标题">
+                    <button type="submit" class="btn btn-sm btn-lg btn-outline-success">搜索</button>
+                </div>
+            </form>
+            <ul class="navbar-nav d-flex justify-content-end mr-2">
+                <!-- Notifications -->
+                <li class="nav-item dropdown">
+                    <a th:if="${session.user}" class="nav-link avatar-with-name" id="navbarDropdownMenuLink"
+                       data-toggle="dropdown" href="#">
+                        <img th:src="@{${session.user.avatar != null ? '/img/' + session.user.avatar : '/img/logo.png'}}"
+                             class="d-inline-block align-top" alt="">
+                    </a>
+                    <a th:unless="${session.user}" class="nav-link" href="/login">登录/注册</a>
+                    <div th:if="${session.user}" class="dropdown-menu dropdown-menu-right"
+                         aria-labelledby="navbarDropdownMenuLink">
+                        <span class="dropdown-item disabled" th:text="${session.user.username}"></span>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-primary" th:href="@{${'/profile/'+session.user.id}}">个人中心</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-primary" href="/logout">退出登录</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="adminx-content">
+        <div class="adminx-main-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div th:if="${notices.isEmpty()}">
+                            <div class="alert alert-primary" style="width: 100%" role="alert">
+                                暂无数据
+                            </div>
+                        </div>
+                        <div th:unless="${notices.isEmpty()}">
+                            <ul class="list-group">
+                                <li class="list-group-item">公告列表</li>
+                                <li class="list-group-item" th:each="item : ${notices.content}">
+                                    <a class="nav-link"
+                                       th:text="${item.title}"
+                                       th:href="'javascript:modal(\''+${item.content}+'\');'"></a>
+                                    <span style="float: right"
+                                          th:text="${item.createTime.toString().replace('T', ' ')}"></span>
+                                </li>
+                            </ul>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">内容</h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="content"></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">关闭
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" th:if="${notices.totalElements>10}">
+                                <div class="col-sm-12">
+                                    <nav style="margin-top: 30px;float: right" aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   th:href="@{${notices.pageable.pageNumber==0 ? '#' :
+                                                '/notice?pageNum='+((notices.pageable.pageNumber)-1)+
+                                                '&pageSize='+notices.pageable.pageSize}}">上一页</a>
+                                            </li>
+                                            <li th:each="item : ${#numbers.sequence(1, notices.totalPages)}"
+                                                th:class="${(item)-1==notices.pageable.pageNumber ? 'page-item active':'page-item'}">
+                                                <a class="page-link" th:text="${item}"
+                                                   th:href="@{${'/notice?pageNum='+((item)-1)+
+                                                   '&pageSize='+notices.pageable.pageSize}}"></a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   th:href="@{${notices.pageable.pageNumber==((notices.totalPages)-1) ? '#' :
+                                                '/notice?pageNum='+((notices.pageable.pageNumber)+1)+
+                                                '&pageSize='+notices.pageable.pageSize}}">下一页</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src=" https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+<!-- If you prefer vanilla JS these are the only required scripts -->
+<!-- script src="../dist/js/vendor.js"></script>
+<script src="../dist/js/adminx.vanilla.js"></script-->
+
+<script>
+    function modal(content) {
+        $('#content').text(content)
+        $('#exampleModal').modal('show')
+    }
+</script>
+</body>
+</html>
